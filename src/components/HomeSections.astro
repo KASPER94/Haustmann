@@ -5,6 +5,15 @@ const CAL: [string, number[]][] = [['Airbnb', [2, 3, 4, 9, 10]], ['Booking.com',
 const taken: Record<number, string> = {};
 CAL.forEach(([name, days]) => days.forEach((d) => (taken[d] = name)));
 const ARR = Array.from({ length: 20 }, (_, i) => i + 1);
+// Téléphone : les six services en une phrase chacun, pour la carte tarif
+const SM_LIST = [
+  'Séance photo et annonce en français et en anglais',
+  'Prix ajustés chaque jour sur Airbnb, Booking.com et Vrbo',
+  'Voyageurs sélectionnés et accueillis, remise des clés',
+  'Linge hôtelier changé à chaque séjour',
+  'Assistance 7&nbsp;j/7, un seul interlocuteur',
+  'Un relevé des revenus après chaque séjour',
+];
 ---
 <div class="gutter">
   <div class="strip wrap" style="max-width:none">
@@ -53,6 +62,14 @@ const ARR = Array.from({ length: 20 }, (_, i) => i + 1);
       <div class="stats-foot">
         <div class="duo"><span class="pics"><img src="/img/studio-bleu.webp" alt=""><img src="/img/salon-blanc.webp" alt=""></span><span>Studios et appartements<br>du 1<sup>er</sup> au 20<sup>e</sup></span></div>
         <a class="more" href="#etapes">Tous les services de la conciergerie <svg aria-hidden="true"><use href="#arrow"/></svg></a>
+      </div>
+      <div class="stats-m" data-reveal>
+        <div class="sm-top"><p class="k2">Gestion complète</p><p class="sm-price"><span class="num">12<sup>%</sup></span><span class="unit">des loyers perçus</span></p></div>
+        <ul class="sm-list">
+          {SM_LIST.map((s) => <li><span class="chk"><svg aria-hidden="true"><use href="#check"/></svg></span><span set:html={s}></span></li>)}
+        </ul>
+        <p class="sm-note">Sans frais d'entrée. Le ménage est réglé par le voyageur.</p>
+        <button class="btn btn-terra" type="button" data-open-flow>Estimer mon appartement <svg aria-hidden="true"><use href="#arrow"/></svg></button>
       </div>
     </div>
   </div>
