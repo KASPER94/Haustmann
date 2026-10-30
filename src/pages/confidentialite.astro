@@ -1,0 +1,31 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+// À mettre à jour quand le formulaire d'estimation enverra les demandes (Worker + e-mail).
+---
+<Base title="Confidentialité · Haustmann" description="Politique de confidentialité du site haustmann.fr : données collectées, cookies, vos droits.">
+  <PageHero tag="Informations" title="Confidentialité" dek="Ce que le site collecte, pourquoi, et comment exercer vos droits." img="fenetre-balcon" pos="50% 40%">
+    <span slot="strip">Ni publicité, ni pistage</span>
+  </PageHero>
+
+  <div class="gutter legal"><div class="wrap">
+    <div class="j-prose">
+      <h2>Responsable du traitement</h2>
+      <p><span class="todo">Raison sociale</span>, <span class="todo">adresse</span>. Contact&nbsp;: <span class="todo">adresse e-mail</span>.</p>
+
+      <h2>Cookies et mesure d'audience</h2>
+      <p>Le site ne dépose aucun cookie de mesure d'audience ni de publicité, d'où l'absence de bandeau de consentement. Cloudflare, notre hébergeur, peut déposer un cookie strictement technique pour protéger le site contre les robots. Ce type de cookie ne demande pas de consentement.</p>
+
+      <h2>Formulaire d'estimation</h2>
+      <p>Pour l'instant, le formulaire d'estimation n'envoie rien&nbsp;: vos réponses restent dans votre navigateur et disparaissent quand vous fermez la page.</p>
+      <p>Quand il sera relié à notre messagerie, il transmettra votre prénom, votre adresse e-mail, votre téléphone si vous l'indiquez, et vos réponses sur le logement. Ces données serviront uniquement à vous rappeler et à préparer votre estimation. Elles seront conservées <span class="todo">durée</span> après notre dernier échange, puis supprimées.</p>
+
+      <h2>Hébergement et sécurité</h2>
+      <p>Le site est hébergé par Cloudflare, qui traite les données techniques de connexion, comme l'adresse IP, pour acheminer les pages et protéger le site contre les abus.</p>
+
+      <h2>Vos droits</h2>
+      <p>Vous pouvez demander l'accès à vos données, leur rectification ou leur effacement, vous opposer à leur traitement ou en demander la limitation et la portabilité, en écrivant à <span class="todo">adresse e-mail</span>.</p>
+      <p>Vous pouvez aussi adresser une réclamation à la CNIL, sur <a href="https://www.cnil.fr/" target="_blank" rel="noopener">cnil.fr</a>.</p>
+    </div>
+  </div></div>
+</Base>

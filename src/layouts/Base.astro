@@ -1,0 +1,61 @@
+---
+import '@fontsource-variable/archivo/wdth.css';
+import '@fontsource/instrument-serif/400.css';
+import '@fontsource/instrument-serif/400-italic.css';
+import '../styles/global.css';
+import Sprite from '../components/Sprite.astro';
+import FloatNav from '../components/FloatNav.astro';
+import Footer from '../components/Footer.astro';
+import Flow from '../components/Flow.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  home?: boolean;
+  current?: 'journal';
+  progress?: boolean;
+  type?: 'website' | 'article';
+  noindex?: boolean;
+}
+const { title, description, image = 'hero-immeuble', home = false, current, progress = false, type = 'website', noindex = false } = Astro.props;
+const canonical = new URL(Astro.url.pathname.replace(/\.html$/, ''), Astro.site);
+const ogImage = new URL(`/img/${image}.webp`, Astro.site);
+---
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>{title}</title>
+    <meta name="description" content={description}>
+    {noindex ? <meta name="robots" content="noindex"> : <link rel="canonical" href={canonical}>}
+    <meta property="og:type" content={type}>
+    <meta property="og:locale" content="fr_FR">
+    <meta property="og:site_name" content="Haustmann">
+    <meta property="og:title" content={title}>
+    <meta property="og:description" content={description}>
+    <meta property="og:url" content={canonical}>
+    <meta property="og:image" content={ogImage}>
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="theme-color" content="#F6EEE3">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    {home && <script is:inline src="/js/intro.js"></script>}
+  </head>
+  <body>
+    <Sprite />
+    <FloatNav home={home} current={current} />
+    {progress && <div class="j-progress" id="j-progress" aria-hidden="true"></div>}
+
+    <main id="top">
+      <slot />
+    </main>
+
+    <Footer />
+    <Flow />
+
+    <script>
+      import '../scripts/site.js';
+    </script>
+  </body>
+</html>

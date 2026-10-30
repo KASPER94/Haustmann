@@ -1,0 +1,38 @@
+---
+// Héros plein cadre. L'accueil a son titre et son immeuble ; les autres pages, une photo de fond.
+// Le bas du héros (texte, boutons, bandeau) vient de la page, par le slot.
+import Nav from './Nav.astro';
+
+interface Props {
+  v: 'home' | 'journal' | 'article';
+  label: string;
+  img?: string;
+  pos?: string;
+  current?: 'journal';
+}
+const { v, label, img = 'toits-couchant', pos = '50% 42%', current } = Astro.props;
+---
+<div class="hero-shell gutter">
+  <section class="hero" id="hero" data-v={v} aria-label={label}>
+    {v === 'home' ? (
+      <Fragment>
+        <div class="h-sky" id="h-sky"></div>
+        <div class="h-dim" id="h-dim"></div>
+        <div class="h-title-wrap" id="h-title-wrap">
+          <h1 class="h-title" id="h-title" aria-label="Haustmann"><span class="tw" aria-hidden="true"><span class="l">H</span><span class="l">A</span><span class="l">U</span><span class="l">S</span><span class="slot" id="slot"><span class="l s-old">S</span><span class="flare"></span><span class="l t-new">T</span></span><span class="l">M</span><span class="l">A</span><span class="l">N</span><span class="l">N</span></span></h1>
+        </div>
+        <div class="h-building" id="h-building"><img src="/img/hero-immeuble.webp" alt="Immeuble haussmannien d'angle au soleil couchant" fetchpriority="high"></div>
+      </Fragment>
+    ) : (
+      <div class="h-alt"><img src={`/img/${img}.webp`} alt="" style={`object-position:${pos}`} fetchpriority="high"></div>
+    )}
+    {v === 'journal' && <div class="j-word-wrap" id="j-word-wrap"><p class="j-word" aria-hidden="true"><span id="j-word">JOURNAL</span></p></div>}
+    <div class="h-shade"></div>
+
+    <Nav current={current} />
+
+    <div class="h-main"></div>
+
+    <slot />
+  </section>
+</div>

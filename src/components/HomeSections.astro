@@ -1,0 +1,208 @@
+---
+// Sections de l'accueil, sous le héros
+// Calendrier synchronisé (illustration) : jours réservés sur 14 jours, par plateforme
+const CAL: [string, number[]][] = [['Airbnb', [2, 3, 4, 9, 10]], ['Booking.com', [6, 7]], ['Vrbo', [12, 13]]];
+const taken: Record<number, string> = {};
+CAL.forEach(([name, days]) => days.forEach((d) => (taken[d] = name)));
+const ARR = Array.from({ length: 20 }, (_, i) => i + 1);
+---
+<div class="gutter">
+  <div class="strip wrap" style="max-width:none">
+    <div class="listing" data-reveal>
+      <div class="ls-head"><p class="eyebrow">Votre annonce</p><span class="ls-tag">Exemple</span></div>
+      <div class="ls-media" data-reveal-img>
+        <div class="ls-track" id="ls-track" tabindex="0" role="group" aria-label="Photos de l'annonce, flèches gauche et droite pour défiler">
+          <img src="/img/salon-blanc.webp" alt="Séjour blanc, moulures et parquet en point de Hongrie">
+          <img src="/img/sejour-plantes.webp" alt="Table ronde et plantes, vue sur le séjour" loading="lazy">
+          <img src="/img/chambre-fenetre.webp" alt="Chambre, porte-fenêtre et balcon en fer forgé" loading="lazy">
+          <img src="/img/fauteuil-fenetre.webp" alt="Fauteuil près de la fenêtre" loading="lazy">
+          <img src="/img/salle-a-manger.webp" alt="Salle à manger, mur bleu et fauteuil rose" loading="lazy">
+        </div>
+        <span class="ls-chip">Photos professionnelles</span>
+        <button class="ls-nav prev" type="button" aria-label="Photo précédente"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M9 2L4 7l5 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button>
+        <button class="ls-nav next" type="button" aria-label="Photo suivante"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M5 2l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button>
+        <div class="ls-dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i></div>
+        <span class="ls-count" id="ls-count" aria-hidden="true">1 / 5</span>
+      </div>
+      <div class="ls-body" id="ls-body" lang="fr">
+        <div class="ls-title-row">
+          <p class="ls-title" id="ls-title">Deux-pièces lumineux, moulures et balcon</p>
+          <div class="lang" role="group" aria-label="Langue de l'annonce"><button type="button" data-lang="fr" aria-pressed="true">FR</button><button type="button" data-lang="en" aria-pressed="false">EN</button></div>
+        </div>
+        <p class="ls-meta" id="ls-meta">Paris 11e · 45&nbsp;m² · 2 voyageurs · 1 chambre</p>
+        <p class="ls-desc" id="ls-desc">Parquet en point de Hongrie, moulures et grandes fenêtres. Quatrième étage avec ascenseur.</p>
+      </div>
+    </div>
+    <div class="stats" id="offre-stats">
+      <div class="stats-row">
+        <div class="stat" data-reveal><span class="k"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M5 11l6-6M5.5 5.5h.01M10.5 10.5h.01" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Commission</span><div class="v">12<sup>%</sup></div><p>des loyers perçus, en gestion complète</p></div>
+        <div class="stat" data-reveal><span class="k"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M13 9.5A5.5 5.5 0 1 1 6.5 3a4.5 4.5 0 0 0 6.5 6.5z" fill="currentColor"/></svg>Résidence principale</span><div class="v">90</div><p>nuits par an au maximum à Paris</p></div>
+        <div class="stat" data-reveal><span class="k"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="3" width="12" height="11" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M2 6.5h12M5 1.5v3M11 1.5v3" stroke="currentColor" stroke-width="1.4"/></svg>Plateformes</span><div class="v">3</div><p>annonces, un seul calendrier</p></div>
+      </div>
+      <div class="incl" data-reveal>
+        <p class="k2">Compris dans les <b>12&nbsp;%</b></p>
+        <dl class="incl-grid">
+          <div><svg aria-hidden="true"><use href="#i-photo"/></svg><dt>Annonce et photos</dt><dd>Séance photo professionnelle, annonce en français et en anglais.</dd></div>
+          <div><svg aria-hidden="true"><use href="#i-price"/></svg><dt>Prix ajustés chaque jour</dt><dd>Alignés sur Airbnb, Booking.com et Vrbo.</dd></div>
+          <div><svg aria-hidden="true"><use href="#i-key"/></svg><dt>Accueil des voyageurs</dt><dd>Sélection des voyageurs, accueil et remise des clés.</dd></div>
+          <div><svg aria-hidden="true"><use href="#i-linen"/></svg><dt>Ménage et linge</dt><dd>Linge hôtelier changé à chaque séjour. Le ménage est réglé par le voyageur.</dd></div>
+          <div><svg aria-hidden="true"><use href="#i-help"/></svg><dt>Assistance 7&nbsp;j/7</dt><dd>Un interlocuteur unique, pour les voyageurs comme pour vous.</dd></div>
+          <div><svg aria-hidden="true"><use href="#i-doc"/></svg><dt>Relevé des revenus</dt><dd>Un compte rendu après chaque séjour.</dd></div>
+        </dl>
+      </div>
+      <div class="stats-foot">
+        <div class="duo"><span class="pics"><img src="/img/studio-bleu.webp" alt=""><img src="/img/salon-blanc.webp" alt=""></span><span>Studios et appartements<br>du 1<sup>er</sup> au 20<sup>e</sup></span></div>
+        <a class="more" href="#etapes">Tous les services de la conciergerie <svg aria-hidden="true"><use href="#arrow"/></svg></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="intro gutter" id="principe">
+  <div class="wrap intro-grid">
+    <div>
+      <p class="eyebrow" data-reveal>Le principe</p>
+      <h2 data-reveal>De l'annonce<br><span class="it">aux draps propres.</span> <svg class="star" aria-hidden="true"><use href="#star"/></svg></h2>
+    </div>
+    <p data-reveal>Annonce, voyageurs, ménage, linge&nbsp;: Haustmann gère la location courte durée de votre appartement parisien pendant vos absences, et vous le rend comme vous l'avez laissé.</p>
+  </div>
+</section>
+
+<section class="gutter" id="offre" aria-label="L'offre">
+  <div class="wrap bento">
+    <div class="b-offer" data-reveal>
+      <p class="eyebrow">L'offre</p>
+      <p class="big" aria-label="12 pour cent">12<span>%</span></p>
+      <p class="lead">des loyers perçus. Gestion complète, sans frais d'entrée, ménage réglé par le voyageur.</p>
+      <div class="calc">
+        <div class="full">
+          <label for="calc-loyers">Loyers perçus sur l'année</label>
+          <div class="v" id="calc-val">20 000 €</div>
+          <input type="range" id="calc-loyers" min="2000" max="60000" step="500" value="20000">
+        </div>
+        <div><span class="k">Commission Haustmann</span><div class="v" id="calc-fee">2 400 €</div></div>
+        <div><span class="k">Vous recevez</span><div class="v" id="calc-net">17 600 €</div></div>
+        <p class="note full">Calcul indicatif. Base de calcul et TVA à préciser.</p>
+      </div>
+    </div>
+    <div class="b-photos" id="b-photos">
+      <div class="fan" id="fan">
+        <img src="/img/salon-blanc.webp" alt="" style="--i:-1.5">
+        <img src="/img/studio-bleu.webp" alt="" style="--i:-.5">
+        <img src="/img/fauteuil-fenetre.webp" alt="" style="--i:.5">
+        <img src="/img/entree-banquette.webp" alt="" style="--i:1.5">
+      </div>
+      <div><h3>Photos professionnelles incluses</h3><p>Un photographe passe avant la mise en ligne. Votre annonce est rédigée en français et en anglais.</p></div>
+    </div>
+    <div class="b-nights" data-reveal>
+      <h3>Nous tenons le compte des nuits.</h3>
+      <div class="num">90<small>nuits par an</small></div>
+      <div class="meter">
+        <div class="meter-head"><span>Compteur 2026 · résidence principale</span><b>54 / 90</b></div>
+        <div class="bar" role="img" aria-label="54 nuits louées sur 90 autorisées"><i id="bar-fill"></i></div>
+        <small>Exemple. Nous fermons le calendrier avant le plafond, toutes plateformes confondues.</small>
+      </div>
+    </div>
+    <div class="b-sync" data-reveal>
+      <h3>Un seul calendrier.</h3>
+      <div class="cal" id="cal" aria-hidden="true">{CAL.map(([name]) => (
+          <div class="cal-row"><span>{name}</span><div class="cal-days">{Array.from({ length: 14 }, (_, d) => <i class={taken[d] === name ? 'on' : taken[d] ? 'off' : ''}></i>)}</div></div>
+        ))}</div>
+      <p>Une réservation prise sur une plateforme bloque les dates sur les deux autres. Pas de double réservation.</p>
+    </div>
+  </div>
+</section>
+
+<section class="steps gutter" id="etapes">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 data-reveal><svg class="star" aria-hidden="true"><use href="#star"/></svg>Avant, pendant, <span class="it">après</span><svg class="star" aria-hidden="true"><use href="#star"/></svg></h2>
+      <p data-reveal>Un interlocuteur unique, des prestataires que nous choisissons, et un compte rendu après chaque séjour.</p>
+      <div class="tabs" role="tablist" aria-label="Moment">
+        <button class="tab" type="button" role="tab" aria-selected="true" data-step="all">Tout voir</button>
+        <button class="tab" type="button" role="tab" aria-selected="false" data-step="1">Avant</button>
+        <button class="tab" type="button" role="tab" aria-selected="false" data-step="2">Pendant</button>
+        <button class="tab" type="button" role="tab" aria-selected="false" data-step="3">Après</button>
+      </div>
+    </div>
+    <div class="cards">
+      <article class="pcard" data-step="1">
+        <div class="pimg" data-reveal-img><img src="/img/entree-banquette.webp" alt="Entrée, banquette en velours vert et console" loading="lazy"><span class="tag">01 · Avant votre départ</span></div>
+        <h3>Nous préparons l'appartement</h3>
+        <ul><li>Visite et conseils de préparation</li><li>Séance photo professionnelle</li><li>Annonce en français et en anglais</li><li>Mise en ligne sur Airbnb, Booking.com et Vrbo</li></ul>
+      </article>
+      <article class="pcard" data-step="2">
+        <div class="pimg" data-reveal-img><img src="/img/chambre-fenetre.webp" alt="Chambre avec porte-fenêtre sur un balcon en fer forgé" loading="lazy"><span class="tag">02 · Pendant votre voyage</span></div>
+        <h3>Nous recevons vos voyageurs</h3>
+        <ul><li>Prix ajustés chaque jour</li><li>Sélection des voyageurs</li><li>Accueil et remise des clés</li><li>Ménage et linge hôtelier</li><li>Assistance 7&nbsp;j/7</li></ul>
+      </article>
+      <article class="pcard" data-step="3">
+        <div class="pimg" data-reveal-img><img src="/img/studio-bleu.webp" alt="Studio clair, canapé bleu et parquet en bois" loading="lazy"><span class="tag">03 · À votre retour</span></div>
+        <h3>Vous retrouvez votre intérieur</h3>
+        <ul><li>Appartement nettoyé, linge changé</li><li>Vos affaires à leur place</li><li>Relevé des séjours et des revenus</li></ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="paris" id="paris" aria-label="Paris">
+  <div class="gutter">
+    <p class="pword" id="pword" aria-hidden="true">PARIS</p>
+    <div class="wrap paris-foot">
+      <div>
+        <p class="eyebrow">Paris</p>
+        <h2>Arrondissement par arrondissement.</h2>
+        <p>Choisissez le vôtre pour commencer l'estimation.</p>
+      </div>
+      <div class="arr" id="arr" role="group" aria-label="Arrondissements">{ARR.map((n) => <button type="button" data-arr={n}>{n === 1 ? '1er' : `${n}e`}</button>)}</div>
+    </div>
+  </div>
+</section>
+
+<div class="dusk-shell gutter">
+  <section class="dusk" id="dusk" aria-label="Le soir">
+    <div class="bgimg" id="dusk-img"><img src="/img/immeuble-soir.webp" alt="Façade haussmannienne au crépuscule, quelques fenêtres allumées" loading="lazy"></div>
+    <div class="dusk-copy">
+      <p class="eyebrow" style="color:rgba(255,246,234,.75)">Pendant votre absence</p>
+      <h2 data-reveal>Vous êtes loin.<br><em class="it">La lumière reste allumée.</em></h2>
+      <p data-reveal>Vos voyageurs sont accueillis, l'appartement est entretenu entre chaque séjour, et vous recevez un relevé détaillé. Vous suivez tout, sans rien gérer.</p>
+      <button class="btn btn-terra" type="button" data-open-flow data-reveal>Estimer mon appartement <svg aria-hidden="true"><use href="#arrow"/></svg></button>
+    </div>
+  </section>
+</div>
+<div class="dusk-tail"></div>
+
+<section class="faq-sec gutter" id="questions">
+  <div class="wrap faq-grid">
+    <div class="faq-side">
+      <p class="eyebrow">Questions</p>
+      <h2>Ce que les propriétaires <span class="it">nous demandent.</span></h2>
+      <div class="pimg" data-reveal-img><img src="/img/salle-a-manger.webp" alt="Salle à manger d'un appartement parisien, mur bleu et fauteuil rose" loading="lazy"></div>
+      <p>Une autre question&nbsp;? Nous en parlons lors de l'estimation.</p>
+    </div>
+    <div class="faq">
+      <details><summary>Combien coûte Haustmann&nbsp;?</summary><p>12&nbsp;% des loyers perçus, pour une gestion complète. Il n'y a pas de frais d'entrée. Le ménage est payé par le voyageur à chaque séjour.</p></details>
+      <details><summary>Ai-je le droit de louer mon appartement&nbsp;?</summary><p>Si c'est votre résidence principale, vous pouvez la louer jusqu'à 90 nuits par an à Paris, avec un numéro d'enregistrement affiché sur chaque annonce. Pour une résidence secondaire, il faut une autorisation de changement d'usage. Nous vérifions votre situation avec vous avant toute mise en ligne.</p></details>
+      <details><summary>Sur quelles plateformes mon appartement est-il publié&nbsp;?</summary><p>Airbnb, Booking.com et Vrbo. Les trois calendriers sont synchronisés, pour éviter les doubles réservations et tenir le compte exact des nuits.</p></details>
+      <details><summary>Les photos sont-elles incluses&nbsp;?</summary><p>Oui. Un photographe professionnel passe avant la mise en ligne.</p></details>
+      <details><summary>Que deviennent mes affaires personnelles&nbsp;?</summary><p>Nous préparons l'appartement avec vous avant votre départ&nbsp;: ce qui doit être rangé, ce qui peut rester, et un placard fermé à clé pour vos effets personnels.</p></details>
+      <details><summary>Puis-je arrêter quand je veux&nbsp;?</summary><p>Oui. Il n'y a pas d'engagement de durée. Les réservations déjà acceptées sont honorées.</p></details>
+    </div>
+  </div>
+</section>
+
+<div class="final-shell gutter">
+  <section class="final" id="final" aria-label="Estimation">
+    <div class="bgimg"><img src="/img/facades-or.webp" alt="Deux façades haussmanniennes ouvragées dans la lumière du soir" loading="lazy"></div>
+    <p class="f-word" id="f-word" aria-hidden="true">HAUS<i class="it">T</i>MANN</p>
+    <div class="f-bottom">
+      <div class="f-copy">
+        <p class="eyebrow" style="color:rgba(255,246,234,.75)">Estimation gratuite</p>
+        <h2>Combien rapporterait votre appartement pendant vos absences&nbsp;?</h2>
+        <p>Cinq questions, deux minutes.</p>
+        <button class="btn btn-terra" type="button" data-open-flow>Estimer mon appartement <svg aria-hidden="true"><use href="#arrow"/></svg></button>
+      </div>
+      <span class="mz"><button class="orb" type="button" data-open-flow><svg aria-hidden="true"><use href="#arrow"/></svg><span>Commencer</span></button></span>
+    </div>
+  </section>
+</div>

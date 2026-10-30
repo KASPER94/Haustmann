@@ -1,0 +1,21 @@
+---
+// Menu du héros : la pastille (.ind) suit le lien survolé, puis revient sur la page en cours
+interface Props { current?: 'journal' }
+const { current } = Astro.props;
+const LINKS = [
+  { href: '/#principe', label: 'Le principe' },
+  { href: '/#offre', label: "L'offre" },
+  { href: '/#etapes', label: 'Avant, pendant, après', menuOnly: true },
+  { href: '/#paris', label: 'Paris' },
+  { href: '/#questions', label: 'Questions' },
+  { href: '/journal', label: 'Journal', page: 'journal' },
+];
+const cur = (l: (typeof LINKS)[number]) => (l.page && l.page === current ? 'page' : undefined);
+---
+<div class="h-nav">
+  <nav class="h-links" aria-label="Sections"><span class="ind" aria-hidden="true"></span>{LINKS.filter((l) => !l.menuOnly).map((l) => <a href={l.href} aria-current={cur(l)}>{l.label}</a>)}</nav>
+  <div class="right">
+    <button class="menu-btn" type="button" id="menu-btn" aria-expanded="false" aria-controls="menu-panel" aria-label="Ouvrir le menu"><svg width="18" height="12" viewBox="0 0 18 12" aria-hidden="true"><path d="M0 1h18M0 6h18M6 11h12" stroke="currentColor" stroke-width="1.5"/></svg></button>
+  </div>
+  <nav class="menu-panel" id="menu-panel" hidden>{LINKS.map((l) => <a href={l.href} aria-current={cur(l)}>{l.label}</a>)}</nav>
+</div>

@@ -1,0 +1,17 @@
+---
+// Héros des pages simples (mentions, confidentialité, 404)
+import Hero from './Hero.astro';
+interface Props { tag: string; title: string; dek: string; img?: string; pos?: string; back?: { href: string; label: string } }
+const { tag, title, dek, img = 'toits-couchant', pos = '50% 42%', back = { href: '/', label: 'Accueil' } } = Astro.props;
+---
+<Hero v="article" label={title} img={img} pos={pos}>
+  <div class="h-bottom">
+    <div class="a-copy">
+      <a class="a-back" href={back.href}><svg aria-hidden="true"><use href="#back"/></svg>{back.label}</a>
+      <span class="a-tag">{tag}</span>
+      <h1 class="a-title">{title}</h1>
+      <p class="a-dek">{dek}</p>
+    </div>
+  </div>
+  <div class="h-strip"><slot name="strip" /></div>
+</Hero>

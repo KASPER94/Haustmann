@@ -1,0 +1,58 @@
+---
+import Base from '../../layouts/Base.astro';
+import Hero from '../../components/Hero.astro';
+import JCard from '../../components/JCard.astro';
+import JCta from '../../components/JCta.astro';
+import { getPosts, CATS, formatDate } from '../../lib/journal';
+
+const posts = await getPosts();
+const [feat] = posts;
+const counts: Record<string, number> = { all: posts.length };
+posts.forEach((p) => (counts[p.data.cat] = (counts[p.data.cat] ?? 0) + 1));
+const updated = new Date(Math.max(...posts.map((p) => p.data.date.getTime())));
+const plural = (n: number) => `${n} article${n > 1 ? 's' : ''}`;
+---
+<Base
+  title="Journal · Haustmann"
+  description="Lois, fiscalité, plateformes : le journal de Haustmann suit les règles de la location courte durée à Paris et les explique simplement, sources officielles à l'appui."
+  image="toits-couchant"
+  current="journal"
+>
+  <Hero v="journal" label="Journal de Haustmann" img="toits-couchant" pos="50% 42%" current="journal">
+    <div class="h-bottom">
+      <div class="h-copy">
+        <p class="tagline">Ce qui change<br><em>pour louer à Paris.</em></p>
+        <p>Lois, fiscalité, plateformes&nbsp;: le journal de Haustmann suit les règles de la location courte durée à Paris et les explique simplement, sources officielles à l'appui.</p>
+        <div class="h-ctas">
+          <a class="btn btn-terra" href={`/journal/${feat.id}`}>Lire l'article à la une <svg aria-hidden="true"><use href="#arrow"/></svg></a>
+          <button class="btn btn-glass" type="button" data-open-flow>Estimer mon appartement</button>
+        </div>
+      </div>
+    </div>
+    <div class="h-strip">
+      <span>Le journal · mis à jour le <b>{formatDate(updated)}</b></span>
+      <span><b>{posts.length}</b> articles</span>
+      <span>Service-Public · Ville de Paris · ANIL · Apur</span>
+    </div>
+  </Hero>
+
+  <div class="gutter"><div class="wrap j-index" id="v-journal">
+    <section class="j-figs" aria-label="Les chiffres du moment">
+      <a class="j-fig" href="/journal/loi-le-meur"><span class="k">Résidence principale</span><span class="v">90<small>nuits</small></span><p>par an au maximum à Paris, depuis le 1<sup>er</sup> janvier 2025</p><span class="go">Lire l'article <svg aria-hidden="true"><use href="#arrow"/></svg></span></a>
+      <a class="j-fig" href="/journal/frais-airbnb"><span class="k">Frais Airbnb</span><span class="v">15,5<small>%</small></span><p>payés par l'hôte seul, à la place des frais partagés</p><span class="go">Lire l'article <svg aria-hidden="true"><use href="#arrow"/></svg></span></a>
+      <a class="j-fig" href="/journal/micro-bic-classement"><span class="k">Micro-BIC, meublé non classé</span><span class="v">30<small>%</small></span><p>d'abattement depuis les revenus 2025, contre 50&nbsp;% s'il est classé</p><span class="go">Lire l'article <svg aria-hidden="true"><use href="#arrow"/></svg></span></a>
+      <a class="j-fig" href="/journal/numero-enregistrement"><span class="k">Enregistrement national</span><span class="v">T4<small>2026</small></span><p>ouverture annoncée du téléservice national d'enregistrement</p><span class="go">Lire l'article <svg aria-hidden="true"><use href="#arrow"/></svg></span></a>
+    </section>
+    <div class="j-filters" role="group" aria-label="Filtrer par thème" id="j-filters">
+      {['all', ...Object.keys(CATS)].map((k) => (
+        <button type="button" data-f={k} aria-pressed={k === 'all' ? 'true' : 'false'}>{k === 'all' ? 'Tout' : CATS[k as keyof typeof CATS]}<span>{counts[k] ?? 0}</span></button>
+      ))}
+      <span class="count" id="j-count" aria-live="polite">{plural(posts.length)}</span>
+    </div>
+    <div id="j-feat"><JCard post={feat} feat /></div>
+    <div class="j-grid" id="j-grid">
+      {posts.map((p) => <JCard post={p} hidden={p === feat} />)}
+    </div>
+    <JCta title="Résidence principale, secondaire, copropriété ?" />
+  </div></div>
+</Base>

@@ -1,0 +1,37 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+// Les passages marqués « à compléter » doivent être remplis avant la mise en ligne.
+---
+<Base title="Mentions légales · Haustmann" description="Mentions légales du site haustmann.fr : éditeur, hébergeur, propriété intellectuelle.">
+  <PageHero tag="Informations" title="Mentions légales" dek="Qui édite ce site, qui l'héberge, et ce que vous pouvez en faire." img="immeuble-angle" pos="50% 40%">
+    <span slot="strip">haustmann.fr</span>
+  </PageHero>
+
+  <div class="gutter legal"><div class="wrap">
+    <div class="j-prose">
+      <h2>Éditeur du site</h2>
+      <p>Le site haustmann.fr est édité par <span class="todo">raison sociale</span>, <span class="todo">forme juridique</span> au capital de <span class="todo">montant</span>&nbsp;€, immatriculée au registre du commerce et des sociétés de <span class="todo">ville</span> sous le numéro <span class="todo">SIREN</span>.</p>
+      <ul>
+        <li>Siège social&nbsp;: <span class="todo">adresse</span></li>
+        <li>Contact&nbsp;: <span class="todo">adresse e-mail</span>, <span class="todo">téléphone</span></li>
+        <li>Numéro de TVA intracommunautaire&nbsp;: <span class="todo">numéro</span></li>
+        <li>Carte professionnelle, si l'activité l'exige&nbsp;: <span class="todo">numéro, CCI de délivrance, garant financier</span></li>
+      </ul>
+      <p>Directeur de la publication&nbsp;: <span class="todo">nom et prénom</span>.</p>
+
+      <h2>Hébergeur</h2>
+      <p>Cloudflare, Inc., 101 Townsend Street, San Francisco, CA 94107, États-Unis. Site&nbsp;: <a href="https://www.cloudflare.com/" target="_blank" rel="noopener">cloudflare.com</a>.</p>
+
+      <h2>Propriété intellectuelle</h2>
+      <p>Les textes, le logo et la mise en page du site appartiennent à <span class="todo">raison sociale</span>. Toute reproduction sans autorisation est interdite.</p>
+      <p>Les photographies proviennent d'Unsplash et sont utilisées selon la licence Unsplash. Elles ont été retouchées.</p>
+
+      <h2>Articles du journal</h2>
+      <p>Les articles du journal sont des contenus d'information. Ils ne remplacent pas un conseil juridique ou fiscal. Chaque article indique ses sources et sa date de mise à jour.</p>
+
+      <h2>Données personnelles</h2>
+      <p>Voir la <a href="/confidentialite">politique de confidentialité</a>.</p>
+    </div>
+  </div></div>
+</Base>

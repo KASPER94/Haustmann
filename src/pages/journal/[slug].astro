@@ -1,0 +1,65 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Hero from '../../components/Hero.astro';
+import JCard from '../../components/JCard.astro';
+import JCta from '../../components/JCta.astro';
+import { getPosts, CATS, typo, formatDate, minutes, sourceNames, type Post } from '../../lib/journal';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post, posts } }));
+}
+
+const { post, posts } = Astro.props as { post: Post; posts: Post[] };
+const d = post.data;
+const { Content, headings } = await render(post);
+// sommaire : les intertitres, puis les sources
+const toc = [...headings.filter((h) => h.depth === 2).map((h) => ({ id: h.slug, text: h.text })), { id: 'sources', text: 'Sources' }];
+// à lire ensuite : même thème d'abord
+const next = posts.filter((p) => p !== post).sort((a, b) => Number(b.data.cat === d.cat) - Number(a.data.cat === d.cat)).slice(0, 3);
+const n = d.sources.length;
+---
+<Base title={`${typo(d.title)} · Haustmann`} description={typo(d.dek)} image={d.img} current="journal" type="article" progress>
+  <Hero v="article" label={typo(d.title)} img={d.img} pos={d.pos} current="journal">
+    <div class="h-bottom">
+      <div class="a-copy">
+        <a class="a-back" href="/journal"><svg aria-hidden="true"><use href="#back"/></svg>Journal</a>
+        <span class="a-tag">{CATS[d.cat]}</span>
+        <h1 class="a-title">{typo(d.title)}</h1>
+        <p class="a-dek">{typo(d.dek)}</p>
+      </div>
+    </div>
+    <div class="h-strip">
+      <span>La rédaction Haustmann</span>
+      <span>Mis à jour le <b>{formatDate(d.date)}</b></span>
+      <span><b>{minutes(post)}</b> min de lecture</span>
+    </div>
+  </Hero>
+
+  <div class="gutter"><div class="wrap" id="v-article">
+    <div class="j-body">
+      <nav class="j-toc" aria-label="Sommaire"><p class="eyebrow">Sommaire</p><ol id="j-toc">{toc.map((h) => <li><a href={`#${h.id}`}>{h.text}</a></li>)}</ol></nav>
+      <article class="j-prose" id="j-prose">
+        <p class="j-basis"><span>Rédigé d'après <b>{n} source{n > 1 ? 's' : ''}</b>&nbsp;: {sourceNames(post)}. Les numéros dans le texte renvoient à chacune.</span><a href="#sources">Voir les sources <svg aria-hidden="true"><use href="#arrow"/></svg></a></p>
+        <Content />
+        <section class="j-sources" aria-labelledby="sources">
+          <h2 id="sources">Sources</h2>
+          <ol>{d.sources.map((s) => <li><a href={s.url} target="_blank" rel="noopener">{typo(s.label ?? s.title)}</a>{s.detail && <Fragment set:html={' ' + typo(s.detail)} />}</li>)}</ol>
+          <p class="j-note">{typo(d.note)}</p>
+        </section>
+      </article>
+      <aside class="j-side" aria-label="Haustmann">
+        <p class="eyebrow">Haustmann</p>
+        <p class="t">Vous partez, <span class="it">nous recevons.</span></p>
+        <p>Gestion complète de votre appartement pendant vos absences, sur Airbnb, Booking.com et Vrbo. 12&nbsp;% des loyers perçus.</p>
+        <button class="btn btn-terra btn-sm" type="button" data-open-flow>Estimer mon appartement <svg aria-hidden="true"><use href="#arrow"/></svg></button>
+      </aside>
+    </div>
+    <section class="j-next" aria-labelledby="j-next-title">
+      <div class="j-next-head"><h2 id="j-next-title">À lire <span class="it">ensuite.</span></h2><a href="/journal">Tous les articles</a></div>
+      <div class="j-grid">{next.map((p) => <JCard post={p} />)}</div>
+    </section>
+    <JCta title="Votre appartement est-il prêt à recevoir ?" />
+  </div></div>
+</Base>
