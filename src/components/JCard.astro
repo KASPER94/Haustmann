@@ -1,0 +1,18 @@
+---
+import { CATS, typo, formatDate, minutes, type Post } from '../lib/journal';
+interface Props { post: Post; feat?: boolean; hidden?: boolean }
+const { post, feat = false, hidden = false } = Astro.props;
+const d = post.data;
+const href = `/journal/${post.id}`;
+---
+{feat ? (
+  <a class="j-feat" href={href} data-jr data-cat={d.cat}>
+    <div class="j-media"><img src={`/img/${d.img}.webp`} alt={typo(d.alt)} style={`object-position:${d.pos}`} loading="lazy"><span class="j-chip">{CATS[d.cat]}</span></div>
+    <div><span class="j-tag">{CATS[d.cat]} · À la une</span><h2>{typo(d.title)}</h2><p class="dek">{typo(d.dek)}</p><span class="j-meta"><span>{formatDate(d.date)}</span><span>{minutes(post)} min de lecture</span></span><span class="j-more">Lire l’article <svg aria-hidden="true"><use href="#arrow"/></svg></span></div>
+  </a>
+) : (
+  <a class="j-card" href={href} data-jr data-cat={d.cat} hidden={hidden}>
+    <div class="j-media"><img src={`/img/${d.img}.webp`} alt={typo(d.alt)} style={`object-position:${d.pos}`} loading="lazy"><span class="j-chip">{CATS[d.cat]}</span></div>
+    <h3>{typo(d.title)}</h3><p>{typo(d.dek)}</p><span class="j-meta"><span>{formatDate(d.date)}</span><span>{minutes(post)} min de lecture</span></span>
+  </a>
+)}

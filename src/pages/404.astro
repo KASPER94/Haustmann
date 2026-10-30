@@ -1,0 +1,9 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+---
+<Base title="Page introuvable · Haustmann" description="Cette page n'existe pas ou a été déplacée." noindex>
+  <PageHero tag="Erreur 404" title="Cette page n'existe pas." dek="Elle a peut-être été déplacée. L'accueil et le journal sont toujours là." img="fenetre-balcon" pos="50% 40%">
+    <span slot="strip"><a class="more" href="/journal">Le journal <svg aria-hidden="true"><use href="#arrow"/></svg></a></span>
+  </PageHero>
+</Base>

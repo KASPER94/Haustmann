@@ -1,0 +1,14 @@
+---
+import { typo } from '../lib/journal';
+interface Props { title: string }
+const { title } = Astro.props;
+---
+<section class="j-cta" aria-label="Estimation">
+  <svg class="deco" aria-hidden="true"><use href="#star"/></svg>
+  <div>
+    <p class="eyebrow">Votre situation</p>
+    <h2>{typo(title)}</h2>
+    <p>Nous vérifions votre situation avec vous lors de l'estimation, avant toute mise en ligne.</p>
+  </div>
+  <button class="btn btn-cream" type="button" data-open-flow>Estimer mon appartement <svg aria-hidden="true"><use href="#arrow"/></svg></button>
+</section>

@@ -1,0 +1,9 @@
+---
+interface Props { home?: boolean; current?: 'journal' }
+const { home = false, current } = Astro.props;
+---
+<header class="float-nav" id="float-nav" aria-label="Navigation">
+  <a class="logo" href={home ? '#top' : '/'}>Haus<i>t</i>mann</a>
+  <nav><a href="/#principe">Le principe</a><a href="/#offre">L'offre</a><a href="/#paris">Paris</a><a href="/#questions">Questions</a><a href="/journal" aria-current={current === 'journal' ? 'page' : undefined}>Journal</a></nav>
+  <button class="btn btn-terra btn-sm" type="button" data-open-flow>Estimer</button>
+</header>

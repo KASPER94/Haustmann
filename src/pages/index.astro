@@ -1,0 +1,30 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import HomeSections from '../components/HomeSections.astro';
+---
+<Base
+  title="Haustmann · Conciergerie Airbnb à Paris"
+  description="Haustmann, conciergerie Airbnb à Paris. Votre appartement accueille des voyageurs pendant vos absences, sans rien à gérer. Gestion complète, 12 % des loyers perçus."
+  home
+>
+  <Hero v="home" label="Haustmann, conciergerie Airbnb à Paris">
+    <div class="h-bottom">
+      <div class="h-copy" data-intro>
+        <p class="tagline">Vous partez.<br><em>Nous recevons.</em></p>
+        <p>Haustmann, conciergerie Airbnb à Paris. Votre appartement accueille des voyageurs pendant vos absences, sans rien à gérer.</p>
+        <div class="h-ctas">
+          <button class="btn btn-terra" type="button" data-open-flow>Estimer mon appartement <svg aria-hidden="true"><use href="#arrow"/></svg></button>
+          <a class="btn btn-glass" href="#principe">Comment ça marche</a>
+        </div>
+      </div>
+      <span class="mz" data-intro><button class="orb" type="button" data-open-flow><svg aria-hidden="true"><use href="#arrow"/></svg><span>Estimer<br>mon appartement</span></button></span>
+    </div>
+    <div class="h-strip" data-intro>
+      <span>Gestion complète · <b>12&nbsp;%</b> des loyers</span>
+      <span>Du 1<sup>er</sup> au 20<sup>e</sup> · <a class="more" href="#etapes">La conciergerie à Paris <svg aria-hidden="true"><use href="#arrow"/></svg></a></span>
+      <span>Airbnb · Booking.com · Vrbo</span>
+    </div>
+  </Hero>
+  <HomeSections />
+</Base>
