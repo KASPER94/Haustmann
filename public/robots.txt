@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://haustmann.fr/sitemap.xml
+Sitemap: https://haustmann.com/sitemap.xml

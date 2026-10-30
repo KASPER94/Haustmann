@@ -86,7 +86,7 @@ Plus tard, ajouter à la CSP de `public/_headers` :
 
 ### 2. Domaine
 
-1. Add a domain → `haustmann.fr`, offre Free.
+1. Add a domain → `haustmann.com`, offre Free.
 2. Chez le registrar, remplacer les serveurs DNS par les deux serveurs donnés par Cloudflare. Attendre que le domaine passe en « Active ».
 3. DNS → Settings : activer DNSSEC, puis copier l'enregistrement DS chez le registrar.
 
@@ -100,14 +100,15 @@ Plus tard, ajouter à la CSP de `public/_headers` :
 
 ### 4. Adresse
 
-1. Dans le Worker `haustmann` → Settings → Domains & Routes → Add → Custom domain : `haustmann.fr`, puis `www.haustmann.fr`.
+1. Dans le Worker `haustmann` → Settings → Domains & Routes → Add → Custom domain : `haustmann.com`, puis `www.haustmann.com`.
 2. Rediriger `www` vers le domaine nu : Rules → Redirect Rules → modèle « Redirect from WWW to root ».
 3. SSL/TLS → Overview : mode Full (strict). Edge Certificates : Always Use HTTPS, version TLS minimale 1.2.
+4. L'adresse du site est `haustmann.com` : elle est écrite dans `astro.config.mjs` (`site`, pour les adresses canoniques et le sitemap) et dans `public/robots.txt`. Si un autre domaine est ajouté (`haustmann.fr` par exemple), le rediriger vers `haustmann.com` avec une Redirect Rule, sans y servir le site une seconde fois.
 
 ### 5. Plus tard
 
 - Formulaire d'estimation : un Worker qui reçoit la demande, vérifie Turnstile, limite le débit (Rate Limiting) et envoie l'e-mail. En attendant, le formulaire n'envoie rien et le dit.
-- Email Routing pour recevoir `contact@haustmann.fr` sur une boîte existante.
+- Email Routing pour recevoir `contact@haustmann.com` sur une boîte existante.
 - Web Analytics, sans cookie.
 
 ## Avant la mise en ligne
