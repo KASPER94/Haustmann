@@ -4,7 +4,7 @@ import { satteri } from '@astrojs/markdown-satteri';
 import { articlePlugin } from './src/lib/markdown.mjs';
 
 export default defineConfig({
-  site: 'https://haustmann.fr',
+  site: 'https://haustmann.com',
   trailingSlash: 'never',
   // journal.html plutôt que journal/index.html : des URL sans barre finale
   build: { format: 'file', inlineStylesheets: 'never' },

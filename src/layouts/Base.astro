@@ -19,7 +19,7 @@ interface Props {
   noindex?: boolean;
 }
 const { title, description, image = 'hero-immeuble', home = false, current, progress = false, type = 'website', noindex = false } = Astro.props;
-const canonical = new URL(Astro.url.pathname.replace(/\.html$/, ''), Astro.site);
+const canonical = new URL(Astro.url.pathname.replace(/\.html$/, '').replace(/\/index$/, '/'), Astro.site);
 const ogImage = new URL(`/img/${image}.webp`, Astro.site);
 ---
 <!doctype html>
