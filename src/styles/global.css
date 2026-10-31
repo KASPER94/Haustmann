@@ -515,13 +515,17 @@ button { font: inherit; color: inherit; }
 .faq-side h2 .it { color: var(--terra-ink); }
 .faq-side .pimg { aspect-ratio: 16 / 11; }
 .faq-side p { margin: 0; color: var(--muted); }
-.faq details { border-top: 1px solid var(--line); }
-.faq details:last-child { border-bottom: 1px solid var(--line); }
-.faq summary { list-style: none; cursor: pointer; padding: 24px 52px 24px 0; position: relative; font-weight: 600; font-size: var(--t-3); line-height: var(--lh-3); }
+.faq { display: grid; gap: 6px; }
+@media (min-width: 960px) { .faq { padding-top: calc(var(--t-1) * var(--lh-4) + 4px); } }  /* la première icône s'aligne sur le titre : hauteur du surtitre + 18 px d'écart − 14 px de marge de la ligne */
+.faq summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: 48px 1fr 20px; align-items: center; gap: 18px; padding: 14px 0; font-weight: 600; font-size: var(--t-3); line-height: var(--lh-3); }
 .faq summary::-webkit-details-marker { display: none; }
-.faq summary::after { content: "+"; position: absolute; right: 0; top: 50%; transform: translateY(-50%); width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--line); display: grid; place-items: center; font-size: 18px; font-weight: 400; transition: transform .3s ease, background-color .3s ease, color .3s ease; }
-.faq details[open] summary::after { transform: translateY(-50%) rotate(45deg); background: var(--terra); border-color: var(--terra); color: #FFF4E8; }
-.faq details p { margin: 0 0 24px; color: var(--muted); max-width: 40em; }
+.fq-ic { width: 48px; height: 48px; border-radius: 14px; border: 1px solid var(--line); display: grid; place-items: center; transition: background-color .3s ease, border-color .3s ease, color .3s ease; }
+.fq-ic svg { width: 20px; height: 20px; }
+.faq summary:hover .fq-ic { border-color: var(--muted); }
+.faq summary::after { content: ""; justify-self: center; width: 8px; height: 8px; margin-top: -5px; border-right: 1.5px solid var(--muted); border-bottom: 1.5px solid var(--muted); transform: rotate(45deg); transition: transform .3s ease, margin .3s ease; }
+.faq details[open] summary::after { transform: rotate(-135deg); margin-top: 5px; border-color: var(--ink); }
+.faq details[open] .fq-ic { background: var(--terra); border-color: var(--terra); color: #FFF4E8; }
+.faq details p { margin: -4px 0 0 66px; padding-bottom: 18px; color: var(--muted); max-width: 36em; }
 
 /* ---------- Final ---------- */
 .final-shell { padding-bottom: 12px; }
