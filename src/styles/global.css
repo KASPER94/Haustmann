@@ -25,7 +25,7 @@
   --t-3: 17px;                       /* texte ; titres d'interface en 600 */
   --d-1: clamp(28px, 2.4vw, 36px);   /* titres de cartes, intertitres (serif) */
   --d-2: clamp(42px, 5vw, 72px);     /* titres de section et de page (serif) */
-  --n-1: clamp(72px, 6.4vw, 92px);   /* chiffres (Archivo 800, largeur 66 %) */
+  --n-1: clamp(72px, 6.4vw, 92px);   /* grands chiffres ; tous les chiffres sont en Archivo 800, largeur 66 %, quelle que soit leur taille */
   --lh-1: .95;                       /* d-2, chiffres */
   --lh-2: 1.1;                       /* d-1 */
   --lh-3: 1.3;                       /* titres d'interface, étiquettes */
@@ -305,7 +305,7 @@ button { font: inherit; color: inherit; }
 .calc { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 24px; padding-top: 22px; border-top: 1px solid rgba(255, 244, 232, .3); }
 .calc .full { grid-column: 1 / -1; }
 .calc label, .calc .k { display: block; font-size: var(--t-2); color: rgba(255, 244, 232, .8); margin-bottom: 4px; }
-.calc .v { font-family: var(--f-serif); font-size: var(--d-1); line-height: var(--lh-2); font-variant-numeric: tabular-nums lining-nums; }
+.calc .v { font-weight: 800; font-stretch: var(--narrow); font-size: var(--d-1); line-height: var(--lh-1); letter-spacing: var(--ls-title); font-variant-numeric: tabular-nums lining-nums; }
 .calc input { width: 100%; accent-color: #FFF4E8; margin: 12px 0 0; }
 .calc .note { font-size: var(--t-1); color: rgba(255, 244, 232, .75); margin: 0; }
 
@@ -474,7 +474,7 @@ button { font: inherit; color: inherit; }
 .pf-copy { grid-area: copy; }
 .paris-foot .pm-clip { grid-area: map; }
 .pf-pick { grid-area: pick; display: grid; gap: 20px; justify-items: start; }
-.paris-foot h2 { font-family: var(--f-serif); font-weight: 400; font-size: var(--d-1); line-height: var(--lh-2); text-wrap: balance; margin: 10px 0 10px; }
+.paris-foot h2 { font-family: var(--f-serif); font-weight: 400; font-size: var(--d-2); line-height: var(--lh-1); letter-spacing: var(--ls-title); text-wrap: balance; margin: 10px 0 10px; }
 .paris-foot p:where(:not(.eyebrow)) { margin: 0; color: var(--on-night-muted); font-size: var(--t-2); }
 .paris-foot .eyebrow { color: var(--on-night-muted); }
 .paris .pm-map {
@@ -573,7 +573,7 @@ footer .end { margin-left: auto; }
 .tiles.wide { grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)); }
 .tile, .option { appearance: none; color: var(--ink); background: var(--card); text-align: left; border: 1px solid var(--line); border-radius: 16px; cursor: pointer; transition: border-color .2s ease, background-color .2s ease; }
 .tile { padding: 14px 14px 12px; display: grid; gap: 2px; }
-.tile b { font-family: var(--f-serif); font-weight: 400; font-size: var(--d-1); line-height: var(--lh-2); }
+.tile b { font-weight: 800; font-stretch: var(--narrow); font-size: var(--d-1); line-height: var(--lh-1); letter-spacing: var(--ls-title); }
 .tile span { font-size: var(--t-1); color: var(--muted); font-variant-numeric: tabular-nums; }
 .tile:hover, .option:hover { border-color: var(--terra); }
 .tile[aria-pressed="true"], .option[aria-pressed="true"] { background: var(--terra); border-color: var(--terra); color: #FFF4E8; }
@@ -625,7 +625,7 @@ footer .end { margin-left: auto; }
 .pm-out { min-height: 52px; display: grid; align-content: center; }
 .pm-hint { margin: 0; color: var(--muted); font-size: var(--t-2); }
 .pm-sel { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 14px; align-items: center; }
-.pm-n { grid-row: span 2; font-family: var(--f-serif); font-weight: 400; font-size: var(--d-2); line-height: var(--lh-1); transition: opacity .2s ease; }
+.pm-n { grid-row: span 2; font-weight: 800; font-stretch: var(--narrow); font-size: var(--d-2); line-height: var(--lh-1); letter-spacing: var(--ls-title); transition: opacity .2s ease; }
 .pm-cp { font-size: var(--t-2); color: var(--muted); font-variant-numeric: tabular-nums; }
 .pm-q { font-size: var(--t-2); line-height: var(--lh-3); transition: opacity .2s ease; }
 .pm-sel.is-preview .pm-n, .pm-sel.is-preview .pm-q { opacity: .45; }
