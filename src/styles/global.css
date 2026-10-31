@@ -351,23 +351,53 @@ button { font: inherit; color: inherit; }
 .dr-chips > span { grid-area: 1 / 1; display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; padding: 4px 11px; border-radius: 999px; background: var(--bg-2); white-space: nowrap; transform: translateY(6px); }
 .dr-chips svg { width: 14px; height: 14px; flex: none; color: var(--terra-ink); }
 .dr-chips .spark { width: 46px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linejoin: round; stroke-linecap: round; }
-/* Plan */
-.dr-plan .room { fill: var(--bg); stroke: var(--ink); stroke-width: 1.6; }
-.dr-plan .fur { fill: none; stroke: var(--muted); stroke-width: 1.1; stroke-linecap: round; stroke-linejoin: round; }
-.dr-plan .win { fill: var(--card); stroke: var(--ink); stroke-width: 1; }
-.dr-plan .gap { stroke: var(--card); stroke-width: 4; }
-.dr-plan .door { stroke: var(--ink); stroke-width: 1.4; }
-.dr-plan .lb { font: 600 11px var(--f-sans); fill: var(--ink); }
-.dr-plan .en { font: 500 10px var(--f-sans); fill: var(--terra-ink); }
-.dr-plan .hl { fill: var(--terra); fill-opacity: .14; stroke: var(--terra); stroke-width: 2; }
-.dr-plan .out { fill: none; stroke: var(--terra); stroke-width: 2; }
-.dr-plan .cone { fill: var(--terra); fill-opacity: .13; stroke: var(--terra); stroke-opacity: .55; stroke-width: 1; }
+/* Plan : murs coupés en plein, sols, meubles au trait. Le jour avant et après le séjour, la nuit pendant (data-m="1") */
+.dr-plan {
+  --p-floor: var(--bg); --p-win: var(--card); --p-wall: var(--ink); --p-line: var(--muted); --p-fur: var(--card); --p-ink: var(--ink);
+  --p-tex: color-mix(in srgb, var(--muted) 34%, transparent); --p-sun: color-mix(in srgb, #FFFDF6 80%, var(--bg));
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .dr-plan { --p-sun: color-mix(in srgb, #FFF1D6 10%, var(--bg)); } }
+:root[data-theme="dark"] .dr-plan { --p-sun: color-mix(in srgb, #FFF1D6 10%, var(--bg)); }
+.dr[data-m="1"] .dr-plan { --p-floor: #2B2019; --p-win: #FFD9A3; --p-wall: #EFE2CF; --p-line: #9A8470; --p-fur: #3A2C22; --p-ink: #F6EADB; --p-tex: rgba(246, 234, 219, .13); }
+.dr-plan * { transition: fill .8s ease, stroke .8s ease, opacity .8s ease; }
+.dr-plan .fl { fill: var(--p-floor); }
+.dr-plan pattern path { fill: none; stroke: var(--p-tex); stroke-width: .55; }
+.dr-plan .tx-carreau, .dr-plan .tx-tomette { opacity: .8; }
+.dr-plan .sun path { fill: var(--p-sun); }
+.dr-plan .night { opacity: 0; }
+.dr[data-m="1"] .dr-plan .night { opacity: 1; }
+.dr[data-m="1"] .dr-plan .sun { opacity: 0; }
+.dr-plan .wall { fill: var(--p-wall); fill-rule: evenodd; }
+.dr-plan .win { fill: var(--p-win); stroke: var(--p-wall); stroke-width: .7; }
+.dr-plan .win-l { stroke: var(--p-wall); stroke-width: .7; }
+.dr-plan .leaf { fill: none; stroke: var(--p-wall); stroke-width: 1.5; stroke-linecap: round; }
+.dr-plan .swing { fill: none; stroke: var(--p-line); stroke-width: .7; }
+.dr-plan .leaf-s { fill: var(--p-wall); }
+.dr-plan .balc { fill: none; stroke: var(--p-line); stroke-width: .8; }
+.dr-plan .balc-r { fill: none; stroke: var(--p-wall); stroke-width: .9; stroke-dasharray: 1 2.2; }
+.dr-plan .fur > * { fill: var(--p-fur); stroke: var(--p-line); stroke-width: .9; stroke-linejoin: round; }
+.dr-plan .fur > path, .dr-plan .fur > .rug { fill: none; }
+.dr-plan .fur > .rug { stroke-dasharray: 2 2.5; stroke-width: .7; }
+.dr-plan .lb { font: 600 11.5px var(--f-sans); letter-spacing: .02em; fill: var(--p-ink); text-anchor: middle; paint-order: stroke; stroke: var(--p-floor); stroke-width: 3px; stroke-linejoin: round; }
+.dr-plan .lb-s { font: 500 8.5px var(--f-sans); letter-spacing: .14em; text-transform: uppercase; fill: var(--p-line); text-anchor: middle; }
+.dr-plan .en { font: 500 10px var(--f-sans); fill: var(--terra-ink); text-anchor: middle; paint-order: stroke; stroke: var(--p-floor); stroke-width: 3px; }
 .dr-plan .route { fill: none; stroke: var(--terra); stroke-width: 2.4; stroke-dasharray: .5 7; stroke-linecap: round; }
+.dr-plan .cone { fill: color-mix(in srgb, var(--terra) 12%, transparent); stroke: var(--terra); stroke-width: .9; stroke-opacity: .7; }
+.dr-plan .hz { fill: url(#dp-hach); stroke: var(--terra); stroke-width: 1.8; }
+.dr-plan .hz.light { stroke-width: 1; }
+.dr-plan #dp-hach path { stroke: var(--terra); stroke-width: 1; stroke-opacity: .55; }
+.dr-plan .out { fill: none; stroke: var(--terra); stroke-width: 2.2; }
+.dr-plan .ping { fill: none; stroke: var(--terra); stroke-width: 1.5; transform-box: fill-box; transform-origin: center; }
 .dr-plan .mk { fill: var(--terra); }
-.dr-plan .ic { color: var(--terra-ink); }
-.dr-plan .disc { fill: var(--card); stroke: var(--terra); stroke-width: 1.4; }
-.dr-plan .ring { fill: none; stroke: var(--terra); stroke-width: 1.5; transform-box: fill-box; transform-origin: center; }
-.dr-plan .bag { fill: var(--card); stroke: var(--terra-ink); stroke-width: 1.3; }
+.dr-plan .bd { fill: var(--terra); stroke: var(--p-floor); stroke-width: 2; }
+.dr-plan .bi { fill: none; stroke: #FFF6EC; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+/* La carte passe à la nuit avec le plan */
+.dr-card, .dr-head, .dr-cue, .dr-chips > span { transition: background-color .8s ease, border-color .8s ease, color .8s ease, opacity .4s ease, transform .4s ease; }
+.dr[data-m="1"] .dr-card { background: #1F1712; border-color: #3B2C22; }
+.dr[data-m="1"] .dr-head { color: #B9A28C; }
+.dr[data-m="1"] .dr-cue { color: #F2B36F; }
+.dr[data-m="1"] .dr-chips > span { background: #33261D; color: #F4E7D6; }
+.dr[data-m="1"] .dr-chips svg { color: #F2B36F; }
 /* Calques : un seul visible, celui de la ligne active. Sans script, le plan reste nu et toutes les lignes sont lisibles */
 .dr .ov { opacity: 0; transition: opacity .45s ease, transform .45s ease; }
 .dr:not(.js) .dr-cue { visibility: hidden; }
@@ -378,8 +408,11 @@ button { font: inherit; color: inherit; }
 .dr:not(.js) .ov { opacity: 0; }
 @keyframes dr-march { to { stroke-dashoffset: -15; } }
 @keyframes dr-ping { from { transform: scale(.6); opacity: .9; } to { transform: scale(1.6); opacity: 0; } }
-.dr.js[data-on="visite"] .route { animation: dr-march 1.1s linear infinite; }
-.dr.js[data-on="cles"] .ring { animation: dr-ping 1.6s ease-out infinite; }
+.dr.js[data-on="visite"] [data-s~="visite"] .route, .dr.js[data-on="voyageurs"] [data-s~="voyageurs"] .route { animation: dr-march 1.1s linear infinite; }
+.dr.js[data-on="cles"] .ping { animation: dr-ping 1.6s ease-out infinite; }
+/* Les voyageurs entrent par la porte d'entrée */
+.dr .ov .walk { transform: translate(-70px, 150px); transition: transform 1.4s cubic-bezier(.2, .7, .2, 1); }
+.dr[data-on="voyageurs"] [data-s~="voyageurs"] .walk { transform: none; }
 /* Liste */
 .dr-mo + .dr-mo { margin-top: 64px; }
 .dr-mo h3 { margin: 0 0 8px; font-weight: 600; font-size: 21px; letter-spacing: -.01em; }
@@ -407,7 +440,8 @@ button { font: inherit; color: inherit; }
   .dr-mo h3 { font-size: 19px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .dr.js[data-on="visite"] .route, .dr.js[data-on="cles"] .ring { animation: none; }
+  .dr.js .route, .dr.js .ping { animation: none !important; }
+  .dr-plan *, .dr .ov .walk, .dr-card, .dr-head, .dr-cue, .dr-chips > span { transition: none; }
 }
 
 /* ---------- PARIS en photo ---------- */
