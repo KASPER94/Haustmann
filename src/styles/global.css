@@ -447,6 +447,7 @@ button { font: inherit; color: inherit; }
   .dr-prog { display: none; }
   .dr-card { padding: 10px 12px 8px; gap: 6px; border-radius: 18px; }
   .dr-plan { max-height: 30svh; }
+  .dr-cue { font-size: var(--t-3); }  /* en d-1, le repère et la pastille ne tiennent plus côte à côte */
   .dr-chips > span { padding: 3px 9px; }
   .dr-track { padding-top: 22px; }
   .dr-mo + .dr-mo { margin-top: 44px; }
