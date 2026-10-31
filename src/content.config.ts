@@ -7,6 +7,7 @@ export const CATS = {
   fiscalite: 'Fiscalité',
   strategie: 'Stratégie',
   marche: 'Marché',
+  securite: 'Sécurité',
 } as const;
 
 const journal = defineCollection({
