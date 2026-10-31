@@ -1,5 +1,6 @@
 ---
 // Sections de l'accueil, sous le héros
+import DeroulePlan from './DeroulePlan.astro';
 // Calendrier synchronisé (illustration) : jours réservés sur 14 jours, par plateforme
 const CAL: [string, number[]][] = [['Airbnb', [2, 3, 4, 9, 10]], ['Booking.com', [6, 7]], ['Vrbo', [12, 13]]];
 const taken: Record<number, string> = {};
@@ -13,6 +14,27 @@ const SM_LIST = [
   'Linge hôtelier changé à chaque séjour',
   'Assistance 7&nbsp;j/7, un seul interlocuteur',
   'Un relevé des revenus après chaque séjour',
+];
+// Le déroulé : une ligne par service. s relie la ligne à un calque du plan, cue est la fréquence affichée sous le plan
+const DR = [
+  { word: 'Avant,', title: "Nous préparons l'appartement", lines: [
+    { s: 'visite', k: 'Visite', v: 'conseils de préparation', cue: 'Étape 1 sur 4' },
+    { s: 'photos', k: 'Photos', v: 'séance professionnelle', cue: 'Étape 2 sur 4' },
+    { s: 'annonce', k: 'Annonce', v: 'en français et en anglais', cue: 'Étape 3 sur 4' },
+    { s: 'enligne', k: 'En ligne', v: 'Airbnb, Booking.com, Vrbo', cue: 'Étape 4 sur 4' },
+  ] },
+  { word: 'pendant,', title: 'Nous recevons vos voyageurs', lines: [
+    { s: 'prix', k: 'Prix', v: 'ajustés chaque jour', cue: 'Chaque jour' },
+    { s: 'voyageurs', k: 'Voyageurs', v: 'sélectionnés et accueillis', cue: 'À chaque réservation' },
+    { s: 'cles', k: 'Clés', v: "remises à l'arrivée", cue: 'À chaque arrivée' },
+    { s: 'menage', k: 'Ménage', v: 'linge hôtelier changé à chaque séjour', cue: 'À chaque séjour' },
+    { s: 'assistance', k: 'Assistance', v: '7\u00a0j/7, un seul interlocuteur', cue: '7 jours sur 7' },
+  ] },
+  { word: 'après.', title: 'Vous retrouvez votre intérieur', lines: [
+    { s: 'appartement', k: 'Appartement', v: 'nettoyé, linge changé', cue: 'À votre retour' },
+    { s: 'affaires', k: 'Vos affaires', v: 'à leur place', cue: 'À votre retour' },
+    { s: 'releve', k: 'Relevé', v: 'des séjours et des revenus', cue: 'À votre retour' },
+  ] },
 ];
 ---
 <div class="gutter">
@@ -79,7 +101,7 @@ const SM_LIST = [
   <div class="wrap intro-grid">
     <div>
       <p class="eyebrow" data-reveal>Le principe</p>
-      <h2 data-reveal>De l'annonce<br><span class="it">aux draps propres.</span> <svg class="star" aria-hidden="true"><use href="#star"/></svg></h2>
+      <h2 data-reveal>De l'annonce<br><span class="it">aux draps propres.</span></h2>
     </div>
     <p data-reveal>Annonce, voyageurs, ménage, linge&nbsp;: Haustmann gère la location courte durée de votre appartement parisien pendant vos absences, et vous le rend comme vous l'avez laissé.</p>
   </div>
@@ -132,32 +154,37 @@ const SM_LIST = [
 
 <section class="steps gutter" id="etapes">
   <div class="wrap">
-    <div class="sec-head">
-      <h2 data-reveal><svg class="star" aria-hidden="true"><use href="#star"/></svg>Avant, pendant, <span class="it">après</span><svg class="star" aria-hidden="true"><use href="#star"/></svg></h2>
+    <div class="steps-head">
+      <h2 class="eyebrow" data-reveal>Le déroulé</h2>
       <p data-reveal>Un interlocuteur unique, des prestataires que nous choisissons, et un compte rendu après chaque séjour.</p>
-      <div class="tabs" role="tablist" aria-label="Moment">
-        <button class="tab" type="button" role="tab" aria-selected="true" data-step="all">Tout voir</button>
-        <button class="tab" type="button" role="tab" aria-selected="false" data-step="1">Avant</button>
-        <button class="tab" type="button" role="tab" aria-selected="false" data-step="2">Pendant</button>
-        <button class="tab" type="button" role="tab" aria-selected="false" data-step="3">Après</button>
-      </div>
     </div>
-    <div class="cards">
-      <article class="pcard" data-step="1">
-        <div class="pimg" data-reveal-img><img src="/img/entree-banquette.webp" alt="Entrée, banquette en velours vert et console" loading="lazy"><span class="tag">01 · Avant votre départ</span></div>
-        <h3>Nous préparons l'appartement</h3>
-        <ul><li>Visite et conseils de préparation</li><li>Séance photo professionnelle</li><li>Annonce en français et en anglais</li><li>Mise en ligne sur Airbnb, Booking.com et Vrbo</li></ul>
-      </article>
-      <article class="pcard" data-step="2">
-        <div class="pimg" data-reveal-img><img src="/img/chambre-fenetre.webp" alt="Chambre avec porte-fenêtre sur un balcon en fer forgé" loading="lazy"><span class="tag">02 · Pendant votre voyage</span></div>
-        <h3>Nous recevons vos voyageurs</h3>
-        <ul><li>Prix ajustés chaque jour</li><li>Sélection des voyageurs</li><li>Accueil et remise des clés</li><li>Ménage et linge hôtelier</li><li>Assistance 7&nbsp;j/7</li></ul>
-      </article>
-      <article class="pcard" data-step="3">
-        <div class="pimg" data-reveal-img><img src="/img/studio-bleu.webp" alt="Studio clair, canapé bleu et parquet en bois" loading="lazy"><span class="tag">03 · À votre retour</span></div>
-        <h3>Vous retrouvez votre intérieur</h3>
-        <ul><li>Appartement nettoyé, linge changé</li><li>Vos affaires à leur place</li><li>Relevé des séjours et des revenus</li></ul>
-      </article>
+    <div class="dr" id="dr" data-on="visite" data-m="0">
+      <div class="dr-stage" aria-hidden="true">
+        <div class="dr-prog"><span data-i="0">Avant</span><span data-i="1">Pendant</span><span data-i="2">Après</span></div>
+        <div class="dr-card">
+          <p class="dr-head"><span>Votre appartement</span><span class="dr-ex">Plan d'exemple</span></p>
+          <DeroulePlan />
+          <div class="dr-foot">
+            <p class="dr-cue it">{DR[0].lines[0].cue}</p>
+            <div class="dr-chips">
+              <span class="ov" data-s="enligne"><svg><use href="#i-globe"/></svg>Airbnb · Booking.com · Vrbo</span>
+              <span class="ov" data-s="prix"><svg class="spark" viewBox="0 0 46 14"><polyline points="0,10 6,8 12,9 18,5 24,6 30,3 36,7 42,4 46,6" /></svg>Prix par nuit <i>· exemple</i></span>
+              <span class="ov" data-s="assistance"><svg><use href="#i-help"/></svg>Un seul interlocuteur</span>
+              <span class="ov" data-s="appartement"><svg><use href="#check"/></svg>Comme vous l'avez laissé</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="dr-track">
+        {DR.map((m, i) => (
+          <div class="dr-mo">
+            <h3><span class:list={['dr-word', { it: i === 2 }]}>{m.word}</span> {m.title}</h3>
+            <ol class="dr-lines">
+              {m.lines.map((l) => <li class="dr-ln" data-s={l.s} data-m={i} data-cue={l.cue}><b>{l.k}</b> <span>{l.v}</span></li>)}
+            </ol>
+          </div>
+        ))}
+      </div>
     </div>
   </div>
 </section>
