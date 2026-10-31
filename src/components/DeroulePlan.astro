@@ -1,0 +1,75 @@
+---
+// Le déroulé : plan d'exemple d'un deux-pièces (viewBox 400 × 300).
+// Chaque groupe .ov porte data-s : il s'affiche quand la ligne de la liste du même nom passe à hauteur de lecture.
+const ROOMS = [
+  { id: 'salon', x: 16, y: 16, w: 214, h: 164, fr: 'Salon', en: 'Living room', dx: 0 },
+  { id: 'chambre', x: 236, y: 16, w: 148, h: 150, fr: 'Chambre', en: 'Bedroom', dx: 0 },
+  { id: 'entree', x: 16, y: 186, w: 92, h: 98, fr: 'Entrée', en: 'Entrance', dx: 0 },
+  { id: 'cuisine', x: 114, y: 186, w: 116, h: 98, fr: 'Cuisine', en: 'Kitchen', dx: 0 },
+  { id: 'placard', x: 236, y: 172, w: 52, h: 112, fr: 'Placard', en: 'Storage', dx: -3 },
+  { id: 'sdb', x: 294, y: 172, w: 90, h: 112, fr: "Salle d'eau", en: 'Shower room', dx: 0 },
+];
+const room = (id: string) => ROOMS.find((r) => r.id === id)!;
+const sdb = room('sdb'), placard = room('placard');
+---
+<svg class="dr-plan" viewBox="0 0 400 300" focusable="false">
+  {ROOMS.map((r) => <rect class="room" x={r.x} y={r.y} width={r.w} height={r.h} rx="6" />)}
+  <g class="fur">
+    <rect class="win" x="48" y="12" width="44" height="8" rx="2" /><rect class="win" x="152" y="12" width="44" height="8" rx="2" /><rect class="win" x="284" y="12" width="56" height="8" rx="2" />
+    <path d="M100 17h34v10h-34zM106 27v-5h22v5" />
+    <rect x="36" y="134" width="120" height="32" rx="6" /><path d="M40 158h112" /><rect x="66" y="94" width="62" height="24" rx="5" /><rect x="178" y="104" width="32" height="32" rx="8" />
+    <rect x="266" y="54" width="90" height="102" rx="5" /><rect x="273" y="60" width="34" height="16" rx="4" /><rect x="315" y="60" width="34" height="16" rx="4" /><path d="M266 86h90" /><rect x="361" y="58" width="16" height="16" rx="3" />
+    <path class="gap" d="M34 284h34" /><path class="door" d="M34 284v-34" /><path d="M34 250a34 34 0 0 1 34 34" stroke-dasharray="2 3" /><rect x="92" y="214" width="10" height="40" rx="2" />
+    <rect x="118" y="258" width="108" height="22" rx="2" /><rect x="128" y="262" width="24" height="14" rx="3" /><circle cx="192" cy="269" r="5" /><circle cx="210" cy="269" r="5" /><circle cx="196" cy="222" r="13" />
+    <path d="M242 214h40M242 236h40M242 258h40" />
+    <rect x="300" y="226" width="42" height="52" rx="3" /><path d="M300 226l42 52M342 226l-42 52" /><ellipse cx="366" cy="230" rx="11" ry="8" /><rect x="356" y="250" width="20" height="28" rx="8" />
+  </g>
+  {ROOMS.map((r) => <text class="lb" x={r.x + 9 + r.dx} y={r.y + 19}>{r.fr}</text>)}
+
+  <!-- Avant -->
+  <g class="ov" data-s="visite">
+    <path class="route" d="M51 276C51 236 62 204 84 178C110 148 150 146 160 112C170 80 232 70 272 108C304 138 300 168 262 198C246 212 258 240 300 214C328 198 344 232 322 250M262 198C232 214 200 232 170 240" />
+    <circle class="mk" cx="51" cy="276" r="4" />
+  </g>
+  <g class="ov" data-s="photos">
+    <polygon class="cone" points="26,172 222,58 132,22" /><circle class="mk" cx="26" cy="172" r="5" />
+    <polygon class="cone" points="378,160 244,62 300,22" /><circle class="mk" cx="378" cy="160" r="5" />
+    <polygon class="cone" points="224,192 120,256 150,282" /><circle class="mk" cx="224" cy="192" r="5" />
+  </g>
+  <g class="ov" data-s="annonce enligne">
+    {ROOMS.map((r) => <text class="en" x={r.x + 9 + r.dx} y={r.y + 32}>{r.en}</text>)}
+  </g>
+  <g class="ov" data-s="enligne"><rect class="out" x="10" y="10" width="380" height="280" rx="10" /></g>
+
+  <!-- Pendant -->
+  <g class="ov" data-s="voyageurs">
+    <path class="route" d="M51 276C51 240 70 200 92 176C112 154 140 120 156 98" />
+    <rect class="bag" x="62" y="226" width="18" height="24" rx="3" /><path class="bag" d="M66 226v-4h10v4" fill="none" />
+    <circle class="disc" cx="150" cy="70" r="16" /><use class="ic" href="#i-user" x="138" y="58" width="24" height="24" />
+    <circle class="disc" cx="190" cy="66" r="16" /><use class="ic" href="#i-user" x="178" y="54" width="24" height="24" />
+  </g>
+  <g class="ov" data-s="cles">
+    <circle class="ring" cx="51" cy="262" r="16" /><circle class="disc" cx="51" cy="262" r="14" /><use class="ic" href="#i-key" x="40" y="251" width="22" height="22" />
+  </g>
+  <g class="ov" data-s="menage">
+    <rect class="hl" x={sdb.x} y={sdb.y} width={sdb.w} height={sdb.h} rx="6" /><rect class="hl" x="266" y="54" width="90" height="102" rx="5" />
+    <circle class="disc" cx="311" cy="120" r="16" /><use class="ic" href="#i-linen" x="299" y="108" width="24" height="24" />
+    <circle class="disc" cx="321" cy="252" r="16" /><use class="ic" href="#check" x="313" y="244" width="16" height="16" />
+  </g>
+  <g class="ov" data-s="assistance">
+    <circle class="disc" cx="123" cy="72" r="20" /><use class="ic" href="#i-help" x="109" y="58" width="28" height="28" />
+  </g>
+
+  <!-- Après -->
+  <g class="ov" data-s="appartement">
+    {ROOMS.map((r) => <rect class="hl" x={r.x} y={r.y} width={r.w} height={r.h} rx="6" />)}
+    {ROOMS.map((r) => <><circle class="disc" cx={r.x + r.w - 16} cy={r.y + r.h - 16} r="10" /><use class="ic" href="#check" x={r.x + r.w - 22} y={r.y + r.h - 22} width="12" height="12" /></>)}
+  </g>
+  <g class="ov" data-s="affaires">
+    <rect class="hl" x={placard.x} y={placard.y} width={placard.w} height={placard.h} rx="6" />
+    <circle class="disc" cx="262" cy="248" r="16" /><use class="ic" href="#i-box" x="250" y="236" width="24" height="24" />
+  </g>
+  <g class="ov" data-s="releve">
+    <circle class="disc" cx="97" cy="106" r="18" /><use class="ic" href="#i-doc" x="84" y="93" width="26" height="26" />
+  </g>
+</svg>

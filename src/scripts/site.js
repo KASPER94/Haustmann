@@ -249,14 +249,32 @@ if (lsTrack) (function () {
 var arr = $('#arr');
 if (arr) arr.addEventListener('click', function (e) { var b = e.target.closest('[data-arr]'); if (b) openFlow(b, Number(b.getAttribute('data-arr'))); });
 
-/* Onglets des étapes */
-$$('.tab').forEach(function (t) {
-  t.addEventListener('click', function () {
-    var s = t.getAttribute('data-step');
-    $$('.tab').forEach(function (o) { o.setAttribute('aria-selected', String(o === t)); });
-    $$('.pcard').forEach(function (c) { c.classList.toggle('dim', s !== 'all' && c.getAttribute('data-step') !== s); });
+/* Le déroulé : la ligne qui passe à hauteur de lecture s'allume, et le plan montre où le service a lieu.
+   Sur ordinateur, la hauteur de lecture est le milieu de l'écran ; sur téléphone, le milieu de ce qui reste sous le plan. */
+var dr = $('#dr');
+if (dr) (function () {
+  var lines = $$('.dr-ln', dr), stage = $('.dr-stage', dr), cue = $('.dr-cue', dr);
+  var wide = window.matchMedia('(min-width: 900px)'), cur = null;
+  dr.classList.add('js');
+  scrollers.push(function () {
+    var r = dr.getBoundingClientRect(), vh = window.innerHeight;
+    if (r.bottom < 0 || r.top > vh) return;
+    var s = stage.getBoundingClientRect();
+    if (!wide.matches) stage.classList.toggle('stuck', s.top <= parseFloat(getComputedStyle(stage).top) + 1);
+    var top = wide.matches ? 0 : s.bottom, y = top + (vh - top) * (wide.matches ? 0.5 : 0.45);
+    var best = lines[0], dist = Infinity;
+    lines.forEach(function (l) {
+      var b = l.getBoundingClientRect(), d = Math.abs((b.top + b.bottom) / 2 - y);
+      if (d < dist) { dist = d; best = l; }
+    });
+    if (best === cur) return;
+    if (cur) cur.classList.remove('on');
+    cur = best; cur.classList.add('on');
+    dr.setAttribute('data-on', cur.getAttribute('data-s'));
+    dr.setAttribute('data-m', cur.getAttribute('data-m'));
+    cue.textContent = cur.getAttribute('data-cue');
   });
-});
+})();
 
 /* Apparitions au défilement (le contenu est visible sans elles) */
 var fan = $('#fan');
