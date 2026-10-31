@@ -1,0 +1,38 @@
+---
+// Plan schématique des 20 arrondissements, dans le style du plan d'appartement du déroulé.
+// Le dessin vient de src/lib/paris-plan.json (produit par tools/paris-plan.py).
+// Chaque arrondissement est un bouton (g.z) ; site.js gère le choix, le survol et le clavier (parisPlan).
+import G from '../lib/paris-plan.json';
+
+const ARR = G.arr as Record<string, { d: string; c: number[] }>;
+const BOIS = G.bois as Record<string, { d: string }>;
+const QUARTIERS: Record<number, string> = {
+  1: 'Louvre, Les Halles', 2: 'Bourse, Sentier', 3: 'Haut-Marais, Arts-et-Métiers', 4: 'Marais, Île Saint-Louis',
+  5: 'Quartier latin, Jardin des Plantes', 6: 'Saint-Germain-des-Prés, Luxembourg', 7: 'Invalides, Tour Eiffel',
+  8: 'Champs-Élysées, Madeleine', 9: 'Opéra, Saint-Georges', 10: "Canal Saint-Martin, Gare de l'Est",
+  11: 'Bastille, Oberkampf', 12: 'Bercy, Bois de Vincennes', 13: "Butte-aux-Cailles, Place d'Italie",
+  14: 'Denfert-Rochereau, Alésia', 15: 'Vaugirard, Grenelle', 16: 'Passy, Auteuil, Bois de Boulogne',
+  17: 'Batignolles, Plaine Monceau', 18: 'Montmartre', 19: 'Buttes-Chaumont, La Villette', 20: 'Belleville, Père-Lachaise',
+};
+const N = Array.from({ length: 20 }, (_, i) => i + 1);
+const lab = (n: number) => (n === 1 ? '1er' : `${n}e`);
+// Le 16e a deux codes postaux : 75016 au sud, 75116 au nord
+const cp = (n: number) => (n === 16 ? '75016 · 75116' : `750${String(n).padStart(2, '0')}`);
+// Téléphone : le plan déborde de son cadre pour que la ville en prenne toute la largeur (les bois sont coupés)
+const [x0, , x1] = G.city;
+const crop = `--crop-w:${((G.viewBox[2] / (x1 - x0)) * 100).toFixed(2)}%;--crop-x:${((-x0 / (x1 - x0)) * 100).toFixed(2)}%`;
+---
+<svg class="pm-map" viewBox={G.viewBox.join(' ')} role="group" aria-label="Plan des 20 arrondissements de Paris" style={crop}>
+  {N.map((n) => (
+    <g class="z" role="button" tabindex="0" aria-pressed="false" aria-label={`${lab(n)} arrondissement, ${cp(n).replace(' · ', ' et ')}`} data-arr={n} data-n={lab(n)} data-cp={cp(n)} data-q={QUARTIERS[n]}>
+      <path d={ARR[n].d} />{BOIS[n] && <path class="bois" d={BOIS[n].d} />}
+    </g>
+  ))}
+  <g class="deco" aria-hidden="true">
+    <path class="outer" d={G.outer} />
+    <path class="seine-b" d={G.seine} /><path class="seine" d={G.seine} />
+    {Object.values(G.iles).map((d) => <path class="ile" d={d} />)}
+    <path class="ring" d="" style="display:none" />
+    {N.map((n) => <text class="lb" data-arr={n} x={ARR[n].c[0]} y={ARR[n].c[1]}>{lab(n)}</text>)}
+  </g>
+</svg>

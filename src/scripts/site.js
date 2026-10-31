@@ -115,7 +115,10 @@ if (tWrap) (function () {
 })();
 
 /* Parallaxe des sections de l'accueil */
-var pword = $('#pword'), duskImg = $('#dusk-img'), fWord = $('#f-word');
+var pword = $('#pword'), duskImg = $('#dusk-img'), fWord = $('#f-word'), fScale = 1;
+// Le flou du mot de fin suit sa taille : sur téléphone, le mot est quatre fois plus petit, son flou aussi, et il s'efface plus tôt
+function fMeasure() { if (fWord) fScale = Math.min(1, parseFloat(getComputedStyle(fWord).fontSize) / 200); }
+fMeasure(); resizers.push(fMeasure);
 if (canAnimate && pword && duskImg && fWord) scrollers.push(function () {
   var r = pword.getBoundingClientRect(), vh = window.innerHeight;
   if (r.bottom > 0 && r.top < vh) {
@@ -129,8 +132,8 @@ if (canAnimate && pword && duskImg && fWord) scrollers.push(function () {
   }
   var f = fWord.getBoundingClientRect();
   if (f.bottom > 0 && f.top < vh) {
-    var k = Math.max(0, Math.min(1, (vh - f.top) / (vh * 0.7)));
-    fWord.style.filter = 'blur(' + (14 - k * 11).toFixed(1) + 'px)';
+    var k = Math.max(0, Math.min(1, (vh - f.top) / (vh * (0.35 + 0.35 * fScale))));
+    fWord.style.filter = 'blur(' + ((14 - k * 11) * fScale).toFixed(1) + 'px)';
     fWord.style.letterSpacing = (0.06 - k * 0.07).toFixed(3) + 'em';
   }
 });
@@ -245,9 +248,47 @@ if (lsTrack) (function () {
   });
 })();
 
-/* Arrondissements : chacun ouvre l'estimation, arrondissement déjà choisi */
-var arr = $('#arr');
-if (arr) arr.addEventListener('click', function (e) { var b = e.target.closest('[data-arr]'); if (b) openFlow(b, Number(b.getAttribute('data-arr'))); });
+/* Plan de Paris (accueil et estimation) : un clic, Entrée ou Espace choisit l'arrondissement, sans passer à la suite.
+   À la souris, le survol le montre sans le choisir ; au clavier, un trait entoure l'arrondissement qui a le focus. */
+function parisPlan(box, onPick, preset) {
+  var zones = $$('.z', box), ring = $('.ring', box), hint = $('.pm-hint', box), sel = $('.pm-sel', box), live = $('.pm-live', box);
+  var num = $('.pm-n', sel), cp = $('.pm-cp', sel), q = $('.pm-q', sel), chosen = null;
+  function show(z, preview) {
+    hint.hidden = !!z; sel.hidden = !z;
+    if (!z) return;
+    num.textContent = z.getAttribute('data-n'); cp.textContent = z.getAttribute('data-cp'); q.textContent = z.getAttribute('data-q');
+    sel.classList.toggle('is-preview', !!preview);
+  }
+  function pick(z, quiet) {
+    chosen = z;
+    zones.forEach(function (o) { o.setAttribute('aria-pressed', String(o === z)); });
+    $$('.lb', box).forEach(function (l) { l.classList.toggle('on', l.getAttribute('data-arr') === z.getAttribute('data-arr')); });
+    show(z, false);
+    if (!quiet) live.textContent = z.getAttribute('data-n') + ' arrondissement choisi';
+    onPick(Number(z.getAttribute('data-arr')));
+  }
+  zones.forEach(function (z) {
+    z.addEventListener('click', function () { pick(z); });
+    z.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(z); } });
+    z.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse' && z !== chosen) show(z, true); });
+    z.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse') show(chosen, false); });
+    z.addEventListener('focus', function () {
+      if (!z.matches(':focus-visible')) return;
+      ring.setAttribute('d', z.firstElementChild.getAttribute('d')); ring.style.display = '';
+      if (z !== chosen) show(z, true);
+    });
+    z.addEventListener('blur', function () { ring.style.display = 'none'; show(chosen, false); });
+  });
+  if (preset) pick(zones[preset - 1], true);
+}
+
+/* Accueil : le plan choisit l'arrondissement, le bouton ouvre l'estimation à l'étape suivante */
+var parisHome = $('#paris-plan');
+if (parisHome) (function () {
+  var btn = $('#pm-go'), label = $('span', btn), chosen = 0;
+  parisPlan(parisHome, function (n) { chosen = n; label.textContent = 'Estimer dans le ' + arrLabel(n); });
+  btn.addEventListener('click', function () { openFlow(btn, chosen); });
+})();
 
 /* Le déroulé : la ligne qui passe à hauteur de lecture s'allume, et le plan montre où le service a lieu.
    Sur ordinateur, la hauteur de lecture est le milieu de l'écran ; sur téléphone, le milieu de ce qui reste sous le plan. */
@@ -314,7 +355,7 @@ if (range) (function () {
 /* =========================================================
    Parcours d'estimation (toutes les pages)
    ========================================================= */
-var flow = $('#flow'), host = $('#step-host'), countEl = $('#flow-count'), bar = $('#flow-progress');
+var flow = $('#flow'), host = $('#step-host'), countEl = $('#flow-count'), bar = $('#flow-progress'), pmTpl = $('#pm-tpl');
 var STEPS = ['arr', 'type', 'pieces', 'nights', 'contact', 'done'];
 var TYPES = {
   principale: { label: 'Résidence principale', hint: 'Vous y vivez au moins 8 mois par an.' },
@@ -326,7 +367,6 @@ var state, idx, lastOpener;
 function reset() { state = { arr: null, type: null, pieces: null, nights: 45, prenom: '', email: '', tel: '' }; idx = 0; }
 reset();
 function arrLabel(n) { return n === 1 ? '1er' : n + 'e'; }
-function postal(n) { return '750' + (n < 10 ? '0' : '') + n; }
 function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
 function go(d) { idx = Math.max(0, Math.min(STEPS.length - 1, idx + d)); render(); }
 var ARROW = '<svg aria-hidden="true"><use href="#arrow"/></svg>';
@@ -341,9 +381,7 @@ function render() {
   $$('#flow-steps li').forEach(function (li, i) { li.className = i === idx ? 'on' : (i < idx ? 'done' : ''); });
 
   if (step === 'arr') {
-    html = '<p class="eyebrow">Votre appartement</p><h2 id="flow-title">Dans quel arrondissement&nbsp;?</h2><div class="tiles">';
-    for (var n = 1; n <= 20; n++) html += '<button class="tile" type="button" data-pick="arr" data-value="' + n + '" aria-pressed="' + (state.arr === n) + '"><b>' + arrLabel(n) + '</b><span>' + postal(n) + '</span></button>';
-    html += '</div>' + actions(state.arr !== null);
+    html = '<p class="eyebrow">Votre appartement</p><h2 id="flow-title">Dans quel arrondissement&nbsp;?</h2><div class="pm-slot"></div>' + actions(state.arr !== null);
   } else if (step === 'type') {
     html = '<p class="eyebrow">Votre appartement' + (state.arr ? ' · <span class="nc">' + arrLabel(state.arr) + '</span>' : '') + '</p><h2 id="flow-title">Ce logement est votre…</h2><div class="options">';
     Object.keys(TYPES).forEach(function (k) { html += '<button class="option" type="button" data-pick="type" data-value="' + k + '" aria-pressed="' + (state.type === k) + '"><b>' + TYPES[k].label + '</b><span>' + TYPES[k].hint + '</span></button>'; });
@@ -380,12 +418,16 @@ function render() {
       '<div class="flow-actions"><button class="btn btn-line" type="button" data-restart>Modifier mes réponses</button><button class="btn btn-terra" type="button" data-finish>Retour au site ' + ARROW + '</button></div>';
   }
   host.innerHTML = '<div class="step enter">' + html + '</div>';
+  if (step === 'arr') {
+    $('.pm-slot', host).replaceWith(pmTpl.content.cloneNode(true));
+    parisPlan($('.pm', host), function (n) { state.arr = n; $('[data-next]', host).disabled = false; }, state.arr);
+  }
   if (step === 'nights') {
     var rg = $('#nights-range');
     rg.addEventListener('input', function () { state.nights = Number(rg.value); $('#nights-out').textContent = state.nights; });
   }
   $('.flow-main').scrollTop = 0;
-  var first = host.querySelector('[aria-pressed="true"], .tile, .option, input, [data-finish]');
+  var first = host.querySelector('[aria-pressed="true"]') || host.querySelector('.z, .tile, .option, input, [data-finish]');
   if (first) first.focus({ preventScroll: true });
 }
 host.addEventListener('click', function (e) {

@@ -1,3 +1,6 @@
+---
+import ParisPlan from './ParisPlan.astro';
+---
 <div class="flow" id="flow" role="dialog" aria-modal="true" aria-labelledby="flow-title" hidden>
   <aside class="flow-aside" aria-hidden="true">
     <img src="/img/immeuble-angle.webp" alt="">
@@ -12,4 +15,15 @@
     </div>
     <div class="flow-body" id="step-host"></div>
   </div>
+  <!-- Étape 1 : le plan, copié par site.js dans l'étape -->
+  <template id="pm-tpl">
+    <div class="pm">
+      <div class="pm-clip"><ParisPlan /></div>
+      <div class="pm-out">
+        <p class="pm-hint">Choisissez votre arrondissement sur le plan.</p>
+        <div class="pm-sel" hidden><b class="pm-n"></b><span class="pm-cp"></span><span class="pm-q"></span></div>
+        <p class="sr pm-live" aria-live="polite"></p>
+      </div>
+    </div>
+  </template>
 </div>
