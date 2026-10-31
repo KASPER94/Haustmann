@@ -191,7 +191,6 @@ button { font: inherit; color: inherit; }
 /* Exemple d'annonce */
 .listing { background: var(--card); border: 1px solid var(--line); padding: clamp(18px, 2.4vw, 28px); display: grid; gap: 16px; align-content: start; }
 .ls-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.ls-tag { font-size: 12px; padding: 4px 10px; border-radius: 999px; border: 1px dashed var(--muted); color: var(--muted); }
 .ls-media { position: relative; border-radius: 22px; overflow: hidden; aspect-ratio: 16 / 10; background: var(--bg-2); }
 .ls-track { display: flex; height: 100%; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
 .ls-track::-webkit-scrollbar { display: none; }
@@ -345,7 +344,6 @@ button { font: inherit; color: inherit; }
 .dr[data-m="0"] .dr-prog [data-i="0"], .dr[data-m="1"] .dr-prog [data-i="0"], .dr[data-m="1"] .dr-prog [data-i="1"], .dr[data-m="2"] .dr-prog span { border-color: var(--terra); color: var(--ink); }
 .dr-card { background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: 16px 18px 14px; display: grid; gap: 10px; }
 .dr-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin: 0; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
-.dr-ex { font-size: 11px; letter-spacing: .02em; text-transform: none; font-weight: 500; border: 1px dashed var(--line); border-radius: 999px; padding: 1px 9px; white-space: nowrap; }
 .dr-plan { display: block; width: 100%; height: auto; max-height: calc(100svh - 300px); }
 .dr-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 30px; }
 .dr-cue { margin: 0; font-size: 24px; line-height: 1.1; color: var(--terra-ink); white-space: nowrap; }
@@ -353,7 +351,6 @@ button { font: inherit; color: inherit; }
 .dr-chips > span { grid-area: 1 / 1; display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; padding: 4px 11px; border-radius: 999px; background: var(--bg-2); white-space: nowrap; transform: translateY(6px); }
 .dr-chips svg { width: 14px; height: 14px; flex: none; color: var(--terra-ink); }
 .dr-chips .spark { width: 46px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linejoin: round; stroke-linecap: round; }
-.dr-chips i { font-style: normal; color: var(--muted); }
 /* Plan */
 .dr-plan .room { fill: var(--bg); stroke: var(--ink); stroke-width: 1.6; }
 .dr-plan .fur { fill: none; stroke: var(--muted); stroke-width: 1.1; stroke-linecap: round; stroke-linejoin: round; }
@@ -420,14 +417,32 @@ button { font: inherit; color: inherit; }
   background-image: url("/img/toits-couchant.webp"); background-size: cover; background-position: 50% 55%;
   -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
 }
-.paris-foot { display: grid; grid-template-columns: 1fr; gap: 24px; margin-top: clamp(24px, 4vw, 48px); align-items: start; }
-@media (min-width: 900px) { .paris-foot { grid-template-columns: 1fr 1.6fr; } }
+/* Le plan des arrondissements : le titre, le plan, puis le choix et le bouton (sous le titre sur ordinateur) */
+.paris-foot { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-areas: "copy" "map" "pick"; gap: 24px; margin-top: clamp(24px, 4vw, 48px); }
+@media (min-width: 900px) {
+  .paris-foot { grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); grid-template-areas: "copy map" "pick map"; grid-template-rows: auto 1fr; column-gap: clamp(32px, 5vw, 80px); }
+  .pf-pick { align-self: end; }
+}
+.pf-copy { grid-area: copy; }
+.paris-foot .pm-clip { grid-area: map; }
+.pf-pick { grid-area: pick; display: grid; gap: 20px; justify-items: start; }
 .paris-foot h2 { font-family: var(--f-serif); font-weight: 400; font-size: clamp(30px, 3vw, 42px); line-height: 1.05; margin: 10px 0 10px; }
 .paris-foot p { margin: 0; color: var(--on-night-muted); font-size: 15px; }
 .paris-foot .eyebrow { color: var(--on-night-muted); }
-.arr { display: flex; flex-wrap: wrap; gap: 8px; }
-.arr button { height: 44px; min-width: 64px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--night-line); background: transparent; color: var(--on-night); cursor: pointer; font-size: 15px; transition: background-color .2s ease, border-color .2s ease, color .2s ease; }
-.arr button:hover { background: var(--terra); border-color: var(--terra); color: #FFF4E8; }
+.paris .pm-map {
+  --pm-fill: var(--night-2); --pm-line: color-mix(in srgb, var(--on-night) 70%, var(--night)); --pm-label: var(--on-night); --pm-river: var(--night);
+  --pm-bois: color-mix(in srgb, var(--on-night) 7%, var(--night)); --pm-bois-line: var(--on-night-muted); --pm-hover: color-mix(in srgb, var(--terra) 30%, var(--night-2)); --pm-ring: var(--terra-2);
+}
+.paris .pm-cp { color: var(--on-night-muted); }
+@media (min-width: 900px) {
+  .paris .pm-out { min-height: 118px; align-content: end; }
+  .paris .pm-sel { grid-template-columns: 1fr; row-gap: 4px; }
+  .paris .pm-n { grid-row: auto; font-size: 64px; margin-bottom: 4px; }
+}
+@media (max-width: 640px) {
+  .paris .pm-map { width: var(--crop-w); max-width: none; margin-left: var(--crop-x); }
+  .pf-pick, .pf-pick .btn { width: 100%; justify-content: center; }
+}
 
 /* ---------- Le soir ---------- */
 .dusk-shell { padding-top: 12px; background: var(--night); }
@@ -466,7 +481,7 @@ button { font: inherit; color: inherit; }
 .final .bgimg { position: absolute; inset: 0; z-index: -2; }
 .final .bgimg img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
 .final::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(40, 18, 8, .1) 0%, rgba(40, 18, 8, .05) 40%, rgba(25, 12, 6, .78) 100%); }
-.f-word { margin: 0; padding: clamp(10px, 2vw, 24px) 2% 0; text-align: center; font-family: var(--f-serif); font-weight: 400; font-size: 14.6vw; line-height: .9; letter-spacing: -.01em; color: #FFF4E4; filter: blur(5px); opacity: .92; white-space: nowrap; }
+.f-word { margin: 0; padding: clamp(10px, 2vw, 24px) 2% 0; text-align: center; font-family: var(--f-serif); font-weight: 400; font-size: 14.6vw; line-height: .9; letter-spacing: -.01em; color: #FFF4E4; filter: blur(min(5px, .35vw)); opacity: .92; white-space: nowrap; }
 .f-word i { color: #3B1A0D; padding-right: .06em; }
 .f-bottom { display: flex; justify-content: space-between; align-items: flex-end; gap: 28px; flex-wrap: wrap; padding: clamp(20px, 4vw, 48px); }
 .f-copy { display: grid; gap: 18px; justify-items: start; max-width: 600px; }
@@ -536,6 +551,56 @@ footer .end { margin-left: auto; }
 .flow-actions { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 40px; flex-wrap: wrap; }
 .btn[disabled] { opacity: .4; cursor: not-allowed; transform: none; box-shadow: none; }
 .btn[disabled]::before { display: none; }
+
+/* ---------- Plan de Paris (étape 1 de l'estimation, et l'accueil en sombre) ---------- */
+.pm-map {
+  --pm-fill: var(--bg); --pm-line: var(--ink); --pm-label: var(--ink); --pm-river: var(--card); --pm-bois: var(--bg-2); --pm-bois-line: var(--muted);
+  --pm-hover: color-mix(in srgb, var(--terra) 16%, var(--bg)); --pm-ring: var(--terra-ink);
+  display: block; width: 100%; height: auto;
+}
+.pm-map .z { cursor: pointer; outline: none; -webkit-tap-highlight-color: transparent; }
+.pm-map .z path { fill: var(--pm-fill); stroke: var(--pm-line); stroke-width: 1.1; stroke-linejoin: round; transition: fill .2s ease; }
+.pm-map .z .bois { fill: var(--pm-bois); stroke: var(--pm-bois-line); stroke-width: 1; stroke-dasharray: 2.5 2.5; }
+@media (hover: hover) { .pm-map .z:hover path { fill: var(--pm-hover); } }
+.pm-map .z[aria-pressed="true"] path { fill: var(--terra); }
+.pm-map .z[aria-pressed="true"] .bois { fill: color-mix(in srgb, var(--terra) 40%, var(--pm-fill)); }
+.pm-map .deco { pointer-events: none; }
+.pm-map .outer { fill: none; stroke: var(--pm-line); stroke-width: 2.6; stroke-linejoin: round; }
+.pm-map .seine-b { fill: none; stroke: var(--pm-line); stroke-width: 7.5; stroke-linecap: round; stroke-linejoin: round; }
+.pm-map .seine { fill: none; stroke: var(--pm-river); stroke-width: 5.3; stroke-linecap: round; stroke-linejoin: round; }
+.pm-map .ile { fill: var(--pm-fill); stroke: var(--pm-line); stroke-width: .8; }
+.pm-map .ring { fill: none; stroke: var(--pm-ring); stroke-width: 3; stroke-linejoin: round; }
+.pm-map .lb { font: 600 10.5px var(--f-sans); fill: var(--pm-label); text-anchor: middle; dominant-baseline: central; transition: fill .2s ease; }
+.pm-map .lb.on { fill: #FFF4E8; }
+.pm-clip { overflow: hidden; }
+/* Le choix : numéro, code postal et quartiers ; estompé tant que la souris ne fait que survoler */
+.pm-out { min-height: 52px; display: grid; align-content: center; }
+.pm-hint { margin: 0; color: var(--muted); font-size: 15px; }
+.pm-sel { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 14px; align-items: center; }
+.pm-n { grid-row: span 2; font-family: var(--f-serif); font-weight: 400; font-size: 44px; line-height: 1; transition: opacity .2s ease; }
+.pm-cp { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.pm-q { font-size: 14.5px; line-height: 1.3; transition: opacity .2s ease; }
+.pm-sel.is-preview .pm-n, .pm-sel.is-preview .pm-q { opacity: .45; }
+/* Dans l'estimation : une carte ; le plan à gauche et le choix à droite quand la place le permet */
+.flow-body { container-type: inline-size; }
+.pm { margin-top: 26px; background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: 14px 18px 16px; display: grid; gap: 10px; }
+.pm .pm-map { max-height: max(240px, calc(100dvh - 440px)); }
+.pm + .flow-actions { margin-top: 28px; }
+@container (min-width: 620px) {
+  .pm { grid-template-columns: minmax(0, 1fr) 168px; gap: 20px; align-items: end; }
+  .pm .pm-out { align-content: end; padding-bottom: 6px; }
+  .pm .pm-sel { grid-template-columns: 1fr; row-gap: 4px; }
+  .pm .pm-n { grid-row: auto; font-size: 64px; margin-bottom: 4px; }
+}
+/* Téléphone : la ville prend toute la largeur de la carte, les bois sont coupés */
+@container (max-width: 520px) {
+  .pm { padding: 12px; gap: 6px; border-radius: 18px; }
+  .pm .pm-clip { margin-inline: -8px; }
+  .pm .pm-map { width: var(--crop-w); max-width: none; max-height: none; margin-left: var(--crop-x); }
+  .pm .pm-n { font-size: 38px; }
+  .pm + .flow-actions { margin-top: 20px; }
+}
+@media (prefers-reduced-motion: reduce) { .pm-map .z path, .pm-map .lb, .pm-n, .pm-q { transition: none; } }
 .summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; margin: 30px 0 0; }
 .summary div { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px; min-width: 0; }
 .summary dt { font-size: 12px; color: var(--muted); }

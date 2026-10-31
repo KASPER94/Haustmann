@@ -24,12 +24,14 @@ src/
   content/journal/*.md    les articles
   content.config.ts       le format des articles (frontmatter)
   lib/markdown.mjs        appels de source {1} et espaces insécables dans les articles
+  lib/paris-plan.json     le plan des arrondissements (étape 1 de l'estimation, section Paris de l'accueil)
   scripts/site.js         animations et interactions, toutes pages
   styles/global.css       styles
 public/
   img/                    photos (webp)
   js/intro.js             état d'attente de l'intro de l'accueil, chargé avant le premier rendu
   _headers                en-têtes de sécurité et de cache, appliqués par Cloudflare
+tools/paris-plan.py       dessine le plan des arrondissements : python3 -E tools/paris-plan.py src/lib/paris-plan.json
 wrangler.jsonc            configuration Cloudflare
 ```
 

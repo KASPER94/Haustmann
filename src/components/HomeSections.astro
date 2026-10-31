@@ -1,11 +1,11 @@
 ---
 // Sections de l'accueil, sous le héros
 import DeroulePlan from './DeroulePlan.astro';
+import ParisPlan from './ParisPlan.astro';
 // Calendrier synchronisé (illustration) : jours réservés sur 14 jours, par plateforme
 const CAL: [string, number[]][] = [['Airbnb', [2, 3, 4, 9, 10]], ['Booking.com', [6, 7]], ['Vrbo', [12, 13]]];
 const taken: Record<number, string> = {};
 CAL.forEach(([name, days]) => days.forEach((d) => (taken[d] = name)));
-const ARR = Array.from({ length: 20 }, (_, i) => i + 1);
 // Téléphone : les six services en une phrase chacun, pour la carte tarif
 const SM_LIST = [
   'Séance photo et annonce en français et en anglais',
@@ -40,7 +40,7 @@ const DR = [
 <div class="gutter">
   <div class="strip wrap" style="max-width:none">
     <div class="listing" data-reveal>
-      <div class="ls-head"><p class="eyebrow">Votre annonce</p><span class="ls-tag">Exemple</span></div>
+      <div class="ls-head"><p class="eyebrow">Votre annonce</p></div>
       <div class="ls-media" data-reveal-img>
         <div class="ls-track" id="ls-track" tabindex="0" role="group" aria-label="Photos de l'annonce, flèches gauche et droite pour défiler">
           <img src="/img/salon-blanc.webp" alt="Séjour blanc, moulures et parquet en point de Hongrie">
@@ -139,7 +139,7 @@ const DR = [
       <div class="meter">
         <div class="meter-head"><span>Compteur 2026 · résidence principale</span><b>54 / 90</b></div>
         <div class="bar" role="img" aria-label="54 nuits louées sur 90 autorisées"><i id="bar-fill"></i></div>
-        <small>Exemple. Nous fermons le calendrier avant le plafond, toutes plateformes confondues.</small>
+        <small>Nous fermons le calendrier avant le plafond, toutes plateformes confondues.</small>
       </div>
     </div>
     <div class="b-sync" data-reveal>
@@ -162,13 +162,13 @@ const DR = [
       <div class="dr-stage" aria-hidden="true">
         <div class="dr-prog"><span data-i="0">Avant</span><span data-i="1">Pendant</span><span data-i="2">Après</span></div>
         <div class="dr-card">
-          <p class="dr-head"><span>Votre appartement</span><span class="dr-ex">Plan d'exemple</span></p>
+          <p class="dr-head"><span>Votre appartement</span></p>
           <DeroulePlan />
           <div class="dr-foot">
             <p class="dr-cue it">{DR[0].lines[0].cue}</p>
             <div class="dr-chips">
               <span class="ov" data-s="enligne"><svg><use href="#i-globe"/></svg>Airbnb · Booking.com · Vrbo</span>
-              <span class="ov" data-s="prix"><svg class="spark" viewBox="0 0 46 14"><polyline points="0,10 6,8 12,9 18,5 24,6 30,3 36,7 42,4 46,6" /></svg>Prix par nuit <i>· exemple</i></span>
+              <span class="ov" data-s="prix"><svg class="spark" viewBox="0 0 46 14"><polyline points="0,10 6,8 12,9 18,5 24,6 30,3 36,7 42,4 46,6" /></svg>Prix par nuit</span>
               <span class="ov" data-s="assistance"><svg><use href="#i-help"/></svg>Un seul interlocuteur</span>
               <span class="ov" data-s="appartement"><svg><use href="#check"/></svg>Comme vous l'avez laissé</span>
             </div>
@@ -192,13 +192,20 @@ const DR = [
 <section class="paris" id="paris" aria-label="Paris">
   <div class="gutter">
     <p class="pword" id="pword" aria-hidden="true">PARIS</p>
-    <div class="wrap paris-foot">
-      <div>
+    <div class="wrap paris-foot" id="paris-plan">
+      <div class="pf-copy">
         <p class="eyebrow">Paris</p>
         <h2>Arrondissement par arrondissement.</h2>
-        <p>Choisissez le vôtre pour commencer l'estimation.</p>
       </div>
-      <div class="arr" id="arr" role="group" aria-label="Arrondissements">{ARR.map((n) => <button type="button" data-arr={n}>{n === 1 ? '1er' : `${n}e`}</button>)}</div>
+      <div class="pm-clip"><ParisPlan /></div>
+      <div class="pf-pick">
+        <div class="pm-out">
+          <p class="pm-hint">Choisissez le vôtre sur le plan pour commencer l'estimation.</p>
+          <div class="pm-sel" hidden><b class="pm-n"></b><span class="pm-cp"></span><span class="pm-q"></span></div>
+          <p class="sr pm-live" aria-live="polite"></p>
+        </div>
+        <button class="btn btn-terra" type="button" id="pm-go"><span>Estimer mon appartement</span> <svg aria-hidden="true"><use href="#arrow"/></svg></button>
+      </div>
     </div>
   </div>
 </section>
@@ -208,7 +215,7 @@ const DR = [
     <div class="bgimg" id="dusk-img"><img src="/img/immeuble-soir.webp" alt="Façade haussmannienne au crépuscule, quelques fenêtres allumées" loading="lazy"></div>
     <div class="dusk-copy">
       <p class="eyebrow" style="color:rgba(255,246,234,.75)">Pendant votre absence</p>
-      <h2 data-reveal>Vous êtes loin.<br><em class="it">La lumière reste allumée.</em></h2>
+      <h2 data-reveal>Vous êtes loin.<br><em class="it">La lumière n'est pas allumée pour rien.</em></h2>
       <p data-reveal>Vos voyageurs sont accueillis, l'appartement est entretenu entre chaque séjour, et vous recevez un relevé détaillé. Vous suivez tout, sans rien gérer.</p>
       <button class="btn btn-terra" type="button" data-open-flow data-reveal>Estimer mon appartement <svg aria-hidden="true"><use href="#arrow"/></svg></button>
     </div>
