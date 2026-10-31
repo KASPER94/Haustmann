@@ -1,75 +1,116 @@
 ---
-// Le déroulé : plan d'exemple d'un deux-pièces (viewBox 400 × 300).
+// Le déroulé : plan d'un deux-pièces haussmannien (viewBox 420 × 330), dessiné comme un plan d'architecte :
+// murs coupés en plein, portes avec battant et arc d'ouverture, fenêtres dans l'épaisseur des murs, balcon filant côté rue.
+// Le plan vit une journée : le jour entre par les fenêtres avant et après le séjour, les lampes s'allument pendant (.dr[data-m="1"]).
 // Chaque groupe .ov porte data-s : il s'affiche quand la ligne de la liste du même nom passe à hauteur de lecture.
-const ROOMS = [
-  { id: 'salon', x: 16, y: 16, w: 214, h: 164, fr: 'Salon', en: 'Living room', dx: 0 },
-  { id: 'chambre', x: 236, y: 16, w: 148, h: 150, fr: 'Chambre', en: 'Bedroom', dx: 0 },
-  { id: 'entree', x: 16, y: 186, w: 92, h: 98, fr: 'Entrée', en: 'Entrance', dx: 0 },
-  { id: 'cuisine', x: 114, y: 186, w: 116, h: 98, fr: 'Cuisine', en: 'Kitchen', dx: 0 },
-  { id: 'placard', x: 236, y: 172, w: 52, h: 112, fr: 'Placard', en: 'Storage', dx: -3 },
-  { id: 'sdb', x: 294, y: 172, w: 90, h: 112, fr: "Salle d'eau", en: 'Shower room', dx: 0 },
+type Box = [number, number, number, number];
+type Pin = [keyof typeof ICON, number, number, boolean?];
+const ROOMS: { box: Box; fr: string; en: string; lb: [number, number]; sol?: string }[] = [
+  { box: [23, 35, 233, 195], fr: 'Salon', en: 'Living room', lb: [128, 180], sol: 'hongrie' },
+  { box: [238, 35, 397, 180], fr: 'Chambre', en: 'Bedroom', lb: [312, 164], sol: 'hongrie' },
+  { box: [23, 200, 111, 307], fr: 'Entrée', en: 'Entrance', lb: [67, 216], sol: 'hongrie' },
+  { box: [116, 200, 233, 307], fr: 'Cuisine', en: 'Kitchen', lb: [196, 216], sol: 'tomette' },
+  { box: [238, 185, 290, 307], fr: 'Placard', en: 'Storage', lb: [264, 226] },
+  { box: [295, 185, 397, 307], fr: "Salle d'eau", en: 'Shower room', lb: [346, 236], sol: 'carreau' },
 ];
-const room = (id: string) => ROOMS.find((r) => r.id === id)!;
-const sdb = room('sdb'), placard = room('placard');
+const OUT: Box = [14, 26, 406, 316];
+// Ouvertures dans les murs : les portes (le sol passe dessous), puis les fenêtres, côté rue en haut et côté cour en bas
+const DOORS: Box[] = [[36, 307, 72, 316], [44, 195, 84, 200], [111, 215, 116, 245], [233, 140, 238, 170], [330, 180, 356, 185], [233, 225, 238, 291]];
+const WINDOWS: Box[] = [[52, 26, 92, 35], [150, 26, 190, 35], [296, 26, 340, 35], [150, 307, 190, 316], [330, 307, 360, 316]];
+// Battant (trait) et débattement (arc) de chaque porte ; les meubles restent hors des arcs
+const LEAVES = [
+  ['M36 307V271', 'M36 271A36 36 0 0 1 72 307'],
+  ['M44 195V175', 'M44 175A20 20 0 0 1 64 195'], ['M84 195V175', 'M84 175A20 20 0 0 0 64 195'],
+  ['M116 215H146', 'M146 215A30 30 0 0 1 116 245'],
+  ['M238 140H268', 'M268 140A30 30 0 0 1 238 170'],
+  ['M356 185V211', 'M356 211A26 26 0 0 1 330 185'],
+];
+const ICON = {
+  key: 'M8 15a4 4 0 1 1 4-4l7 0v3h-2v2h-2v-2h-3a4 4 0 0 1-4 1z',
+  user: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4.5 20a7.5 7.5 0 0 1 15 0',
+  linen: 'M4 7h16v4H4zM5 11v7h14v-7M9 7V5h6v2',
+  help: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .8-1 1.5v.7M12 17h.01',
+  check: 'M5 12.5l4.5 4.5L19 7.5',
+  lock: 'M6 11h12v9H6zM8.5 11V8a3.5 3.5 0 0 1 7 0v3M12 15v2',
+  doc: 'M6 3h9l4 4v14H6zM15 3v4h4M9 12h7M9 16h7',
+  cam: 'M3 8h4l2-3h6l2 3h4v11H3zM12 17a4 4 0 1 0 0-8 4 4 0 0 0 0 8z',
+  bag: 'M6 8h12v12H6zM9 8V5h6v3M9 12v4M15 12v4',
+};
+const rect = ([x0, y0, x1, y1]: Box) => `M${x0} ${y0}H${x1}V${y1}H${x0}Z`;
+const xywh = ([x0, y0, x1, y1]: Box) => ({ x: x0, y: y0, width: x1 - x0, height: y1 - y0 });
+const WALLS = rect(OUT) + [...ROOMS.map((r) => r.box), ...DOORS, ...WINDOWS].map(rect).join('');
+const BED: Box = [325, 70, 389, 124];
+const [, , , , placard, sdb] = ROOMS.map((r) => r.box);
+// Calques : le tracé au sol (SVG), puis les pastilles ; true = la pastille entre par la porte d'entrée
+const OV: { s: string; floor?: string; pins?: Pin[] }[] = [
+  { s: 'visite', floor: '<path class="route" d="M54 300C54 262 64 222 64 196C64 160 112 122 160 122C200 122 218 152 238 155C290 160 330 160 343 183C350 210 343 236 330 250M66 232C84 232 104 230 140 232"/><circle class="mk" cx="54" cy="300" r="4"/>' },
+  { s: 'photos', floor: '<path class="cone" d="M30 188L120 40L224 112Z"/><path class="cone" d="M244 172L330 40L396 130Z"/><path class="cone" d="M124 206L228 244L170 304Z"/>', pins: [['cam', 30, 188], ['cam', 244, 172], ['cam', 124, 206]] },
+  { s: 'enligne', floor: `<path class="out" d="${rect([OUT[0] - 5, OUT[1] - 5, OUT[2] + 5, OUT[3] + 5])}"/>` },
+  { s: 'voyageurs', floor: '<path class="route" d="M54 300C54 262 64 222 64 196C64 168 96 140 150 132"/>', pins: [['bag', 82, 262], ['user', 150, 66, true], ['user', 160, 152, true]] },
+  { s: 'cles', floor: '<circle class="ping" cx="54" cy="290" r="14"/>', pins: [['key', 54, 290]] },
+  { s: 'menage', floor: `<path class="hz" d="${rect(sdb) + rect(BED)}"/>`, pins: [['linen', 352, 97], ['check', 346, 262]] },
+  { s: 'assistance', pins: [['help', 67, 262]] },
+  { s: 'appartement', floor: `<path class="hz light" d="${ROOMS.map((r) => rect(r.box)).join('')}"/>`, pins: ROOMS.map((r) => ['check', (r.box[0] + r.box[2]) / 2, (r.box[1] + r.box[3]) / 2 + (r.box === placard ? 30 : 8)] as Pin) },
+  { s: 'affaires', floor: `<path class="hz" d="${rect(placard)}"/>`, pins: [['lock', 264, 250]] },
+  { s: 'releve', pins: [['doc', 46, 249]] },
+];
 ---
-<svg class="dr-plan" viewBox="0 0 400 300" focusable="false">
-  {ROOMS.map((r) => <rect class="room" x={r.x} y={r.y} width={r.w} height={r.h} rx="6" />)}
+<svg class="dr-plan" viewBox="0 0 420 330" focusable="false">
+  <defs>
+    <pattern id="dp-hongrie" width="12" height="8" patternUnits="userSpaceOnUse"><path d="M0 0v8M0 0l6 4 6-4M0 4l6 4 6-4" /></pattern>
+    <pattern id="dp-carreau" width="9" height="9" patternUnits="userSpaceOnUse"><path d="M0 0h9M0 0v9" /></pattern>
+    <pattern id="dp-tomette" width="10" height="17.3" patternUnits="userSpaceOnUse"><path d="M0 0l5 2.9v5.8L0 11.5M10 0l-5 2.9M5 8.7l5 2.9v5.8M0 17.3v-5.8" /></pattern>
+    <pattern id="dp-hach" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 0v6" /></pattern>
+    <radialGradient id="dp-lampe"><stop offset="0" stop-color="#FFC77F" stop-opacity=".75" /><stop offset=".45" stop-color="#FFB766" stop-opacity=".32" /><stop offset="1" stop-color="#FFB766" stop-opacity="0" /></radialGradient>
+    <linearGradient id="dp-dehors" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#FFD9A3" stop-opacity=".8" /><stop offset="1" stop-color="#FFD9A3" stop-opacity="0" /></linearGradient>
+    <clipPath id="dp-pieces">{ROOMS.map((r) => <rect {...xywh(r.box)} />)}</clipPath>
+  </defs>
+
+  <!-- Sols, seuils compris -->
+  {[...ROOMS.map((r) => r.box), ...DOORS].map((b) => <rect class="fl" {...xywh(b)} />)}
+  <g class="sun"><path d="M52 35H92L122 104H82Z" /><path d="M150 35H190L220 104H180Z" /><path d="M296 35H340L366 98H322Z" /></g>
+  {ROOMS.filter((r) => r.sol).map((r) => <rect class={`tx tx-${r.sol}`} {...xywh(r.box)} fill={`url(#dp-${r.sol})`} />)}
+  <g class="night">
+    <g clip-path="url(#dp-pieces)"><circle cx="208" cy="60" r="78" fill="url(#dp-lampe)" /><circle cx="388" cy="64" r="60" fill="url(#dp-lampe)" /><circle cx="66" cy="250" r="50" fill="url(#dp-lampe)" /><circle cx="175" cy="244" r="46" fill="url(#dp-lampe)" /></g>
+    <path d="M52 26H92L100 2H44ZM150 26H190L198 2H142ZM296 26H340L348 2H288Z" fill="url(#dp-dehors)" />
+  </g>
+
+  <!-- Meubles -->
   <g class="fur">
-    <rect class="win" x="48" y="12" width="44" height="8" rx="2" /><rect class="win" x="152" y="12" width="44" height="8" rx="2" /><rect class="win" x="284" y="12" width="56" height="8" rx="2" />
-    <path d="M100 17h34v10h-34zM106 27v-5h22v5" />
-    <rect x="36" y="134" width="120" height="32" rx="6" /><path d="M40 158h112" /><rect x="66" y="94" width="62" height="24" rx="5" /><rect x="178" y="104" width="32" height="32" rx="8" />
-    <rect x="266" y="54" width="90" height="102" rx="5" /><rect x="273" y="60" width="34" height="16" rx="4" /><rect x="315" y="60" width="34" height="16" rx="4" /><path d="M266 86h90" /><rect x="361" y="58" width="16" height="16" rx="3" />
-    <path class="gap" d="M34 284h34" /><path class="door" d="M34 284v-34" /><path d="M34 250a34 34 0 0 1 34 34" stroke-dasharray="2 3" /><rect x="92" y="214" width="10" height="40" rx="2" />
-    <rect x="118" y="258" width="108" height="22" rx="2" /><rect x="128" y="262" width="24" height="14" rx="3" /><circle cx="192" cy="269" r="5" /><circle cx="210" cy="269" r="5" /><circle cx="196" cy="222" r="13" />
-    <path d="M242 214h40M242 236h40M242 258h40" />
-    <rect x="300" y="226" width="42" height="52" rx="3" /><path d="M300 226l42 52M342 226l-42 52" /><ellipse cx="366" cy="230" rx="11" ry="8" /><rect x="356" y="250" width="20" height="28" rx="8" />
-  </g>
-  {ROOMS.map((r) => <text class="lb" x={r.x + 9 + r.dx} y={r.y + 19}>{r.fr}</text>)}
-
-  <!-- Avant -->
-  <g class="ov" data-s="visite">
-    <path class="route" d="M51 276C51 236 62 204 84 178C110 148 150 146 160 112C170 80 232 70 272 108C304 138 300 168 262 198C246 212 258 240 300 214C328 198 344 232 322 250M262 198C232 214 200 232 170 240" />
-    <circle class="mk" cx="51" cy="276" r="4" />
-  </g>
-  <g class="ov" data-s="photos">
-    <polygon class="cone" points="26,172 222,58 132,22" /><circle class="mk" cx="26" cy="172" r="5" />
-    <polygon class="cone" points="378,160 244,62 300,22" /><circle class="mk" cx="378" cy="160" r="5" />
-    <polygon class="cone" points="224,192 120,256 150,282" /><circle class="mk" cx="224" cy="192" r="5" />
-  </g>
-  <g class="ov" data-s="annonce enligne">
-    {ROOMS.map((r) => <text class="en" x={r.x + 9 + r.dx} y={r.y + 32}>{r.en}</text>)}
-  </g>
-  <g class="ov" data-s="enligne"><rect class="out" x="10" y="10" width="380" height="280" rx="10" /></g>
-
-  <!-- Pendant -->
-  <g class="ov" data-s="voyageurs">
-    <path class="route" d="M51 276C51 240 70 200 92 176C112 154 140 120 156 98" />
-    <rect class="bag" x="62" y="226" width="18" height="24" rx="3" /><path class="bag" d="M66 226v-4h10v4" fill="none" />
-    <circle class="disc" cx="150" cy="70" r="16" /><use class="ic" href="#i-user" x="138" y="58" width="24" height="24" />
-    <circle class="disc" cx="190" cy="66" r="16" /><use class="ic" href="#i-user" x="178" y="54" width="24" height="24" />
-  </g>
-  <g class="ov" data-s="cles">
-    <circle class="ring" cx="51" cy="262" r="16" /><circle class="disc" cx="51" cy="262" r="14" /><use class="ic" href="#i-key" x="40" y="251" width="22" height="22" />
-  </g>
-  <g class="ov" data-s="menage">
-    <rect class="hl" x={sdb.x} y={sdb.y} width={sdb.w} height={sdb.h} rx="6" /><rect class="hl" x="266" y="54" width="90" height="102" rx="5" />
-    <circle class="disc" cx="311" cy="120" r="16" /><use class="ic" href="#i-linen" x="299" y="108" width="24" height="24" />
-    <circle class="disc" cx="321" cy="252" r="16" /><use class="ic" href="#check" x="313" y="244" width="16" height="16" />
-  </g>
-  <g class="ov" data-s="assistance">
-    <circle class="disc" cx="123" cy="72" r="20" /><use class="ic" href="#i-help" x="109" y="58" width="28" height="28" />
+    <rect class="rug" x="90" y="74" width="68" height="80" />
+    <rect x="178" y="78" width="28" height="74" rx="3" /><path d="M200 82V148" />
+    <rect x="112" y="98" width="30" height="34" rx="3" />
+    <rect x="44" y="58" width="26" height="26" rx="3" /><path d="M44 78h26" />
+    <rect x="23" y="92" width="10" height="40" rx="1" /><path d="M27 100v24" />
+    <circle cx="208" cy="60" r="6" />
+    <rect x={BED[0]} y={BED[1]} width={BED[2] - BED[0]} height={BED[3] - BED[1]} rx="3" /><path d="M378 74v46" /><rect x="380" y="76" width="7" height="18" rx="2" /><rect x="380" y="100" width="7" height="18" rx="2" />
+    <rect x="380" y="58" width="13" height="11" rx="2" /><rect x="380" y="125" width="13" height="11" rx="2" /><circle cx="386" cy="63" r="3.5" />
+    <rect x="23" y="228" width="10" height="42" rx="1" />
+    <rect x="122" y="285" width="107" height="22" rx="2" /><rect x="165" y="290" width="20" height="12" rx="1" /><circle cx="205" cy="296" r="3" /><circle cx="217" cy="296" r="3" />
+    <rect x="120" y="250" width="18" height="34" rx="2" /><path d="M120 262h18" />
+    <rect x="242" y="189" width="44" height="10" rx="1" /><rect x="242" y="297" width="44" height="10" rx="1" />
+    <rect x="363" y="189" width="34" height="34" rx="1" /><path d="M363 189l34 34M397 189l-34 34" />
+    <rect x="300" y="185" width="26" height="16" rx="3" /><ellipse cx="313" cy="193" rx="7" ry="4" />
+    <rect x="322" y="287" width="20" height="20" rx="2" /><circle cx="332" cy="297" r="6" />
   </g>
 
-  <!-- Après -->
-  <g class="ov" data-s="appartement">
-    {ROOMS.map((r) => <rect class="hl" x={r.x} y={r.y} width={r.w} height={r.h} rx="6" />)}
-    {ROOMS.map((r) => <><circle class="disc" cx={r.x + r.w - 16} cy={r.y + r.h - 16} r="10" /><use class="ic" href="#check" x={r.x + r.w - 22} y={r.y + r.h - 22} width="12" height="12" /></>)}
-  </g>
-  <g class="ov" data-s="affaires">
-    <rect class="hl" x={placard.x} y={placard.y} width={placard.w} height={placard.h} rx="6" />
-    <circle class="disc" cx="262" cy="248" r="16" /><use class="ic" href="#i-box" x="250" y="236" width="24" height="24" />
-  </g>
-  <g class="ov" data-s="releve">
-    <circle class="disc" cx="97" cy="106" r="18" /><use class="ic" href="#i-doc" x="84" y="93" width="26" height="26" />
-  </g>
+  <!-- Murs coupés, fenêtres, portes, balcon -->
+  <path class="wall" d={WALLS} />
+  {WINDOWS.map((w) => <><rect class="win" {...xywh(w)} /><path class="win-l" d={`M${w[0]} ${(w[1] + w[3]) / 2}H${w[2]}`} /></>)}
+  {LEAVES.map(([a, b]) => <><path class="leaf" d={a} /><path class="swing" d={b} /></>)}
+  <rect class="leaf-s" x="233.6" y="225" width="1.8" height="34" /><rect class="leaf-s" x="236" y="257" width="1.8" height="34" />
+  <path class="balc" d="M30 26V12H390V26" /><path class="balc-r" d="M30 16H390" />
+  <text class="lb-s" x="54" y="327">Palier</text><text class="lb-s" x="210" y="9">Balcon</text>
+  {ROOMS.map((r) => <text class="lb" x={r.lb[0]} y={r.lb[1]}>{r.fr}</text>)}
+
+  <!-- Avant, pendant, après -->
+  <g class="ov" data-s="annonce enligne">{ROOMS.map((r) => <text class="en" x={r.lb[0]} y={r.lb[1] + 12}>{r.en}</text>)}</g>
+  {OV.map((o) => (
+    <g class="ov" data-s={o.s}>
+      {o.floor && <Fragment set:html={o.floor} />}
+      {(o.pins ?? []).map(([n, x, y, walk]) => (
+        <g class:list={['pin', { walk }]}><circle class="bd" cx={x} cy={y} r="13" /><path class="bi" d={ICON[n]} transform={`translate(${(x - 8.1).toFixed(1)} ${(y - 8.1).toFixed(1)}) scale(.677)`} /></g>
+      ))}
+    </g>
+  ))}
 </svg>
