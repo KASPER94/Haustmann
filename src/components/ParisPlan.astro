@@ -18,7 +18,7 @@ const N = Array.from({ length: 20 }, (_, i) => i + 1);
 const lab = (n: number) => (n === 1 ? '1er' : `${n}e`);
 // Le 16e a deux codes postaux : 75016 au sud, 75116 au nord
 const cp = (n: number) => (n === 16 ? '75016 · 75116' : `750${String(n).padStart(2, '0')}`);
-// Téléphone : le plan déborde de son cadre pour que la ville en prenne toute la largeur (les bois sont coupés)
+// Estimation sur téléphone : le plan déborde de son cadre pour que la ville en prenne toute la largeur (les bois sont coupés). Sur l'accueil, le plan reste entier.
 const [x0, , x1] = G.city;
 const crop = `--crop-w:${((G.viewBox[2] / (x1 - x0)) * 100).toFixed(2)}%;--crop-x:${((-x0 / (x1 - x0)) * 100).toFixed(2)}%`;
 ---

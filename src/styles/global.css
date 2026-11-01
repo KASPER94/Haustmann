@@ -488,7 +488,6 @@ button { font: inherit; color: inherit; }
   .paris .pm-n { grid-row: auto; margin-bottom: 4px; }
 }
 @media (max-width: 640px) {
-  .paris .pm-map { width: var(--crop-w); max-width: none; margin-left: var(--crop-x); }
   .pf-pick, .pf-pick .btn { width: 100%; justify-content: center; }
 }
 
