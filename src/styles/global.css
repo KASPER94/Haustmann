@@ -671,6 +671,15 @@ footer .end { margin-left: auto; }
 .j-fig .go { font-size: var(--t-2); color: var(--gold); display: inline-flex; gap: 6px; align-items: center; margin-top: 4px; }
 .j-fig .go svg { width: 11px; height: 11px; transition: transform .4s cubic-bezier(.2, .8, .2, 1); }
 .j-fig:hover .go svg { transform: translate(2px, -2px); }
+/* Téléphone : les quatre chiffres en deux colonnes, le chiffre d'abord, son libellé dessous ; le détail est dans l'article */
+@media (max-width: 560px) {
+  .j-figs { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 18px; padding: 6px 20px; }
+  .j-fig { position: relative; gap: 6px; padding-block: 18px; }
+  .j-fig:nth-child(-n+2) { border-top: 0; }
+  .j-fig .v { order: -1; font-size: var(--d-2); }
+  .j-fig p { display: none; }
+  .j-fig .go { position: absolute; top: 20px; right: 0; margin: 0; font-size: 0; }
+}
 .j-filters { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin: clamp(56px, 7vw, 96px) 0 clamp(28px, 3vw, 40px); }
 .j-filters button { height: 40px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--line); background: transparent; cursor: pointer; font-size: var(--t-2); color: var(--muted); transition: background-color .3s ease, color .3s ease, border-color .3s ease; }
 .j-filters button:hover { color: var(--ink); border-color: var(--ink); }
