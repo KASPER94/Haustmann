@@ -291,19 +291,34 @@ if (parisHome) (function () {
 })();
 
 /* Le déroulé : la ligne qui passe à hauteur de lecture s'allume, et le plan montre où le service a lieu.
-   Sur ordinateur, la hauteur de lecture est le milieu de l'écran ; sur téléphone, le milieu de ce qui reste sous le plan. */
+   Sur ordinateur, la hauteur de lecture est le milieu de l'écran ; sur téléphone, le milieu de ce qui reste sous le plan.
+   Sur téléphone, quand le défilement s'arrête entre deux lignes, la page glisse doucement jusqu'à la plus proche :
+   jamais pendant que le doigt est posé ni pendant l'élan, jamais au-delà de la première ou de la dernière, et un nouveau geste l'interrompt.
+   (Pas de scroll-snap : sur iPhone, il ferait avancer d'une seule ligne par geste.) */
 var dr = $('#dr');
 if (dr) (function () {
-  var lines = $$('.dr-ln', dr), stage = $('.dr-stage', dr), cue = $('.dr-cue', dr);
-  var wide = window.matchMedia('(min-width: 900px)'), cur = null;
+  var lines = $$('.dr-ln', dr), stage = $('.dr-stage', dr), cue = $('.dr-cue', dr), ticks = $$('.dr-ticks i', dr);
+  var wide = window.matchMedia('(min-width: 900px)'), cur = null, touching = false, settleT;
   dr.classList.add('js');
+  function readY() {
+    var vh = window.innerHeight, top = wide.matches ? 0 : stage.getBoundingClientRect().bottom;
+    return top + (vh - top) * (wide.matches ? 0.5 : 0.45);
+  }
+  function settle() {
+    if (wide.matches || reduce || touching || !cur || !stage.classList.contains('stuck')) return;
+    var b = cur.getBoundingClientRect(), d = (b.top + b.bottom) / 2 - readY();
+    if ((cur === lines[0] && d > 0) || (cur === lines[lines.length - 1] && d < 0)) return;  // avant la première ligne ou après la dernière, on sort : rien ne retient
+    if (Math.abs(d) > 2 && Math.abs(d) < b.height * 0.6) window.scrollBy({ top: d, behavior: 'smooth' });
+  }
+  function later() { clearTimeout(settleT); settleT = setTimeout(settle, 160); }
+  window.addEventListener('touchstart', function () { touching = true; clearTimeout(settleT); }, { passive: true });
+  ['touchend', 'touchcancel'].forEach(function (t) { window.addEventListener(t, function () { touching = false; later(); }, { passive: true }); });
   scrollers.push(function () {
-    var r = dr.getBoundingClientRect(), vh = window.innerHeight;
-    if (r.bottom < 0 || r.top > vh) return;
-    var s = stage.getBoundingClientRect();
-    if (!wide.matches) stage.classList.toggle('stuck', s.top <= parseFloat(getComputedStyle(stage).top) + 1);
-    var top = wide.matches ? 0 : s.bottom, y = top + (vh - top) * (wide.matches ? 0.5 : 0.45);
-    var best = lines[0], dist = Infinity;
+    var r = dr.getBoundingClientRect();
+    if (r.bottom < 0 || r.top > window.innerHeight) return;
+    if (!wide.matches) stage.classList.toggle('stuck', stage.getBoundingClientRect().top <= parseFloat(getComputedStyle(stage).top) + 1);
+    later();
+    var y = readY(), best = lines[0], dist = Infinity;
     lines.forEach(function (l) {
       var b = l.getBoundingClientRect(), d = Math.abs((b.top + b.bottom) / 2 - y);
       if (d < dist) { dist = d; best = l; }
@@ -314,6 +329,8 @@ if (dr) (function () {
     dr.setAttribute('data-on', cur.getAttribute('data-s'));
     dr.setAttribute('data-m', cur.getAttribute('data-m'));
     cue.textContent = cur.getAttribute('data-cue');
+    var n = lines.indexOf(cur);
+    ticks.forEach(function (t, i) { t.classList.toggle('on', i <= n); });
   });
 })();
 

@@ -132,7 +132,7 @@ const DR = [
       <div class="dr-stage" aria-hidden="true">
         <div class="dr-prog"><span data-i="0">Avant</span><span data-i="1">Pendant</span><span data-i="2">Après</span></div>
         <div class="dr-card">
-          <p class="dr-head"><span>Votre appartement</span></p>
+          <p class="dr-head"><span>Votre appartement</span><span class="dr-ticks">{DR.map((m) => <span>{m.lines.map(() => <i />)}</span>)}</span></p>
           <DeroulePlan />
           <div class="dr-foot">
             <p class="dr-cue it">{DR[0].lines[0].cue}</p>
