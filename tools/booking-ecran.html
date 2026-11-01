@@ -1,10 +1,10 @@
 <!doctype html>
-<!-- Écran de l'article sur Booking.com (public/img/booking-alerte.webp), posé sur la photo d'Unsplash « iMac blanc éteint »
+<!-- Écran de l'article sur Booking.com (public/img/booking-imac.webp), posé sur la photo d'Unsplash « iMac blanc éteint »
      de Jessy Smith (unsplash.com/fr/photos/zFOm6KzA-7g, licence Unsplash). Depuis la racine du projet :
      curl -so /tmp/imac.jpg "https://images.unsplash.com/photo-1517059224940-d4af9eec41b7?fm=jpg&w=2400&q=85"
      "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless=new --hide-scrollbars --force-device-scale-factor=2 --allow-file-access-from-files --window-size=995,571 --virtual-time-budget=1500 --screenshot=/tmp/ecran.png "file://$PWD/tools/booking-ecran.html"
-     magick /tmp/imac.jpg \( /tmp/ecran.png -resize 995x571! -blur 0x0.4 \) -geometry +702+503 -composite -resize 2000x /tmp/booking-alerte.png
-     cwebp -q 82 /tmp/booking-alerte.png -o public/img/booking-alerte.webp
+     magick /tmp/imac.jpg \( /tmp/ecran.png -resize 995x571! -blur 0x0.4 \) -geometry +702+503 -composite -resize 2000x /tmp/booking-imac.png
+     cwebp -q 82 /tmp/booking-imac.png -o public/img/booking-imac.webp
      Le nom Booking.com est écrit en Archivo, la police du site : ce n'est pas le logo de la marque. -->
 <html lang="fr"><head><meta charset="utf-8">
 <style>
