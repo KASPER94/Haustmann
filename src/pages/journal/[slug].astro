@@ -21,7 +21,7 @@ const next = posts.filter((p) => p !== post).sort((a, b) => Number(b.data.cat ==
 const n = d.sources.length;
 ---
 <Base title={`${typo(d.title)} · Haustmann`} description={typo(d.dek)} image={d.img} current="journal" type="article" progress>
-  <Hero v="article" label={typo(d.title)} img={d.img} pos={d.pos} current="journal">
+  <Hero v="article" label={typo(d.title)} img={d.img} pos={d.pos} light={d.light} current="journal">
     <div class="h-bottom">
       <div class="a-copy">
         <a class="a-back" href="/journal"><svg aria-hidden="true"><use href="#back"/></svg>Journal</a>

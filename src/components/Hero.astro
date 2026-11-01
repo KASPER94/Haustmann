@@ -8,12 +8,13 @@ interface Props {
   label: string;
   img?: string;
   pos?: string;
+  light?: boolean;
   current?: 'journal';
 }
-const { v, label, img = 'toits-couchant', pos = '50% 42%', current } = Astro.props;
+const { v, label, img = 'toits-couchant', pos = '50% 42%', light = false, current } = Astro.props;
 ---
 <div class="hero-shell gutter">
-  <section class="hero" id="hero" data-v={v} aria-label={label}>
+  <section class="hero" id="hero" data-v={v} data-light={light ? '' : undefined} aria-label={label}>
     {v === 'home' ? (
       <Fragment>
         <div class="h-sky" id="h-sky"></div>

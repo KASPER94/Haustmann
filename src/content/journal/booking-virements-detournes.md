@@ -2,9 +2,10 @@
 title: "Virements détournés sur Booking.com : ce qui s'est passé, comment s'en protéger"
 dek: "En 2026, des escrocs ont pris la main sur des comptes d'hébergeurs Booking.com pour changer les coordonnées bancaires et écrire aux voyageurs. Le 21 octobre, la Commission européenne a ouvert une enquête. Les faits, et les règles que nous appliquons chez Haustmann."
 cat: securite
-img: booking-alerte
-pos: "10% 30%"
-alt: "Illustration : un ordinateur portable ouvert sur un compte hôte Booking.com affiche une alerte « Coordonnées bancaires modifiées », l'ancien IBAN barré et un nouveau à la place"
+img: booking-imac
+pos: "5% 50%"
+light: true
+alt: "Un ordinateur blanc sur un bureau clair affiche un compte hôte Booking.com et l'alerte « Coordonnées bancaires modifiées », l'ancien IBAN barré"
 date: 2026-10-31
 order: 0
 sources:
