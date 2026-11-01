@@ -1,0 +1,40 @@
+<!doctype html>
+<!-- Écran de l'article sur Booking.com (public/img/booking-alerte.webp), posé sur la photo d'Unsplash « iMac blanc éteint »
+     de Jessy Smith (unsplash.com/fr/photos/zFOm6KzA-7g, licence Unsplash). Depuis la racine du projet :
+     curl -so /tmp/imac.jpg "https://images.unsplash.com/photo-1517059224940-d4af9eec41b7?fm=jpg&w=2400&q=85"
+     "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless=new --hide-scrollbars --force-device-scale-factor=2 --allow-file-access-from-files --window-size=995,571 --virtual-time-budget=1500 --screenshot=/tmp/ecran.png "file://$PWD/tools/booking-ecran.html"
+     magick /tmp/imac.jpg \( /tmp/ecran.png -resize 995x571! -blur 0x0.4 \) -geometry +702+503 -composite -resize 2000x /tmp/booking-alerte.png
+     cwebp -q 82 /tmp/booking-alerte.png -o public/img/booking-alerte.webp
+     Le nom Booking.com est écrit en Archivo, la police du site : ce n'est pas le logo de la marque. -->
+<html lang="fr"><head><meta charset="utf-8">
+<style>
+  @font-face { font-family: "Archivo"; src: url("../node_modules/@fontsource-variable/archivo/files/archivo-latin-wght-normal.woff2") format("woff2"); font-weight: 100 900; }
+  html, body { margin: 0; width: 995px; height: 571px; overflow: hidden; background: #FBF7F1; }
+  svg { display: block; }
+  text { font-family: "Archivo", sans-serif; }
+</style></head>
+<body>
+<svg width="995" height="571" viewBox="0 0 995 571">
+  <rect width="995" height="571" fill="#FBF7F1"/>
+  <!-- Barre du compte hôte : le nom est écrit en Archivo, ce n'est pas le logo -->
+  <rect width="995" height="66" fill="#EFE6DA"/>
+  <text x="34" y="44" font-size="30" font-weight="800" fill="#21170F" letter-spacing="-.4">Booking.com</text>
+  <text x="254" y="43" font-size="14" font-weight="500" fill="#8A7563" letter-spacing="1.8">COMPTE HÔTE</text>
+  <circle cx="955" cy="33" r="14" fill="#D9CCBB"/>
+  <!-- L'alerte -->
+  <rect x="160" y="112" width="675" height="272" rx="16" fill="#FFFFFF" stroke="#E6D7C4" stroke-width="2"/>
+  <rect x="160" y="112" width="9" height="272" rx="4.5" fill="#C4532A"/>
+  <path d="M222 146L250 194H194Z" fill="none" stroke="#C4532A" stroke-width="4.5" stroke-linejoin="round"/>
+  <path d="M222 163V177M222 185V186" stroke="#C4532A" stroke-width="4.5" stroke-linecap="round"/>
+  <text x="276" y="160" font-size="15" font-weight="600" fill="#A9431D" letter-spacing="2">ALERTE DE SÉCURITÉ</text>
+  <text x="276" y="204" font-size="33" font-weight="700" fill="#21170F" letter-spacing="-.4">Coordonnées bancaires modifiées</text>
+  <text x="276" y="240" font-size="19" fill="#7A6656">Connexion depuis un appareil inconnu</text>
+  <text x="276" y="320" font-size="15" font-weight="600" fill="#8A7563" letter-spacing="1.6">IBAN</text>
+  <text x="330" y="320" font-size="19" fill="#A8978A" text-decoration="line-through">FR76 •••• •••• 0412</text>
+  <path d="M532 313H562M553 305L562 313L553 321" fill="none" stroke="#A8978A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="578" y="320" font-size="19" font-weight="700" fill="#C4532A">FR76 •••• •••• 9310</text>
+  <rect x="160" y="420" width="360" height="14" rx="7" fill="#EDE4D8"/>
+  <rect x="160" y="450" width="520" height="14" rx="7" fill="#F2EBE1"/>
+  <rect x="160" y="480" width="440" height="14" rx="7" fill="#F2EBE1"/>
+</svg>
+</body></html>

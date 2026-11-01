@@ -32,7 +32,7 @@ public/
   js/intro.js             état d'attente de l'intro de l'accueil, chargé avant le premier rendu
   _headers                en-têtes de sécurité et de cache, appliqués par Cloudflare
 tools/paris-plan.py       dessine le plan des arrondissements : python3 -E tools/paris-plan.py src/lib/paris-plan.json
-tools/booking-alerte.html illustration de l'article sur Booking.com (commande de rendu en tête du fichier)
+tools/booking-ecran.html  écran de l'illustration de l'article sur Booking.com (commandes en tête du fichier)
 wrangler.jsonc            configuration Cloudflare
 ```
 
