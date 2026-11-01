@@ -19,6 +19,8 @@ const journal = defineCollection({
     // nom d'une image de public/img, sans extension
     img: z.string(),
     pos: z.string().default('50% 50%'),
+    // photo claire : le héros la fonce davantage pour que le titre reste lisible
+    light: z.boolean().default(false),
     alt: z.string(),
     date: z.coerce.date(),
     // ordre d'affichage : le plus petit est à la une
