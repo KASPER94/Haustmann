@@ -438,7 +438,7 @@ button { font: inherit; color: inherit; }
   .dr-chips > span { padding: 3px 9px; }
   .dr-track { padding-top: 22px; }
   .dr-mo + .dr-mo { margin-top: 44px; }
-  .dr-ln { grid-template-columns: 1fr; min-height: max(88px, 24svh); padding: 12px 0; }  /* chaque ligne a sa part de défilement : un geste léger avance d'une ligne */
+  .dr-ln { grid-template-columns: 1fr; min-height: 88px; padding: 12px 0; }
 }
 @media (prefers-reduced-motion: reduce) {
   .dr.js .route, .dr.js .ping { animation: none !important; }

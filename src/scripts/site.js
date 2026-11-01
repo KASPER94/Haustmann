@@ -291,10 +291,12 @@ if (parisHome) (function () {
 })();
 
 /* Le déroulé : la ligne qui passe à hauteur de lecture s'allume, et le plan montre où le service a lieu.
-   Sur ordinateur, la hauteur de lecture est le milieu de l'écran ; sur téléphone, le milieu de ce qui reste sous le plan.
+   Sur ordinateur, la hauteur de lecture est le milieu de l'écran. Sur téléphone, c'est la hauteur où tombe la première ligne
+   d'un moment quand son titre (avant, pendant, après) est calé juste sous le plan.
    Sur téléphone, chaque ligne est un aimant. Un geste qui part du déroulé suit le doigt, puis l'élan est calculé ici :
-   s'il doit finir près d'une ligne, la page y glisse ; les débuts d'avant, pendant et après attirent de plus loin.
-   Un élan qui finit loin de tout aimant (pour sortir du déroulé) n'est pas retenu, ni rien avant la première ligne ou après la dernière.
+   s'il finit dans le déroulé, la page glisse jusqu'à la ligne la plus proche de son point d'arrivée ; les débuts d'avant,
+   pendant et après attirent de plus loin, mais seulement quand on va vers eux, jamais quand on les quitte.
+   Un élan qui finit avant la première ligne ou après la dernière n'est pas retenu : on sort du déroulé.
    Un geste parti d'ailleurs garde le défilement du navigateur, et la page se cale seulement quand il s'arrête.
    (Pas de scroll-snap : sur iPhone, il ferait avancer d'une seule ligne par geste.) */
 var dr = $('#dr');
@@ -303,36 +305,44 @@ if (dr) (function () {
   var wide = window.matchMedia('(min-width: 900px)'), cur = null, touching = false, settleT, anim = 0, drag = null;
   var TAU = 380;    // ms : distance d'un élan = vitesse × TAU (un peu moins loin que le natif, pour sentir les crans)
   var STRONG = 2.5; // les débuts de moment attirent 2,5 fois plus loin qu'une ligne
+  var GAP = 14;     // px entre le bas du plan et le titre d'un moment calé dessous
   dr.classList.add('js');
+  function lead() {
+    var h = $('h3', dr).getBoundingClientRect(), b = lines[0].getBoundingClientRect();
+    return GAP + (b.top + b.bottom) / 2 - h.top;
+  }
   function readY() {
-    var vh = window.innerHeight, top = wide.matches ? 0 : stage.getBoundingClientRect().bottom;
-    return top + (vh - top) * (wide.matches ? 0.5 : 0.45);
+    return wide.matches ? window.innerHeight * 0.5 : stage.getBoundingClientRect().bottom + lead();
   }
   function magnet() { return !wide.matches && !reduce && !(window.visualViewport && visualViewport.scale > 1.01); }
-  // Position de défilement où chaque ligne est à hauteur de lecture, plan fixé
+  // Positions de défilement, plan fixé : une ligne à hauteur de lecture, ou le titre d'un moment calé sous le plan
   function wells() {
-    var st = parseFloat(getComputedStyle(stage).top), h = stage.offsetHeight, y = window.scrollY;
-    var ry = st + h + (window.innerHeight - st - h) * 0.45, stick = y + dr.getBoundingClientRect().top - st;
+    var st = parseFloat(getComputedStyle(stage).top), y = window.scrollY, under = st + stage.offsetHeight;
+    var ry = under + lead(), stick = y + dr.getBoundingClientRect().top - st;
     return lines.map(function (l, i) {
-      var b = l.getBoundingClientRect();
-      return { s: Math.max(stick, y + (b.top + b.bottom) / 2 - ry), w: i === 0 || l.getAttribute('data-m') !== lines[i - 1].getAttribute('data-m') ? STRONG : 1, edge: i === 0 ? -1 : i === lines.length - 1 ? 1 : 0 };
+      var first = i === 0 || l.getAttribute('data-m') !== lines[i - 1].getAttribute('data-m');
+      var b = (first ? $('h3', l.parentNode.parentNode) : l).getBoundingClientRect();
+      var at = first ? y + b.top - under - GAP : y + (b.top + b.bottom) / 2 - ry;
+      return { s: Math.max(stick, at), w: first ? STRONG : 1 };
     });
   }
-  function pick(yEnd) {
-    var best = null, e = lines[0].offsetHeight * 0.55;
-    wells().forEach(function (w) {
-      var x = yEnd - w.s;
-      if ((w.edge < 0 && x < 0) || (w.edge > 0 && x > 0)) return;
-      if (Math.abs(x) / w.w < e) { e = Math.abs(x) / w.w; best = w; }
+  // dir : sens du geste (1 vers le bas, -1 vers le haut, 0 sans geste) ; un début de moment déjà dépassé dans ce sens attire comme une ligne
+  function pick(y0, yEnd, dir) {
+    var list = wells(), best = null, e = Infinity;
+    if (yEnd < list[0].s || yEnd > list[list.length - 1].s) return null;
+    list.forEach(function (w) {
+      var d = Math.abs(yEnd - w.s) / (dir === 0 || (w.s - y0) * dir > 0 ? w.w : 1);
+      if (d < e) { e = d; best = w; }
     });
     return best;
   }
-  function to(y) { root.style.scrollBehavior = 'auto'; window.scrollTo(0, y); root.style.scrollBehavior = ''; }
+  var own = 0;
+  function to(y) { own = performance.now(); root.style.scrollBehavior = 'auto'; window.scrollTo(0, y); root.style.scrollBehavior = ''; }
   function stop() { if (anim) cancelAnimationFrame(anim); anim = 0; }
   // v en px/ms, positif vers le bas. Vers un aimant : courbe qui part à la vitesse du doigt et arrive à vitesse nulle.
-  function glide(v) {
+  function glide(v, dir) {
     stop();
-    var y0 = window.scrollY, t0 = performance.now(), w = pick(y0 + v * TAU), frame;
+    var y0 = window.scrollY, t0 = performance.now(), w = pick(y0, y0 + v * TAU, dir), frame;
     if (w) {
       var d = w.s - y0;
       if (Math.abs(d) < 1) return;
@@ -353,8 +363,9 @@ if (dr) (function () {
     }
     anim = requestAnimationFrame(frame);
   }
+  // Après un défilement du navigateur (pas après une glissade d'ici)
   function settle() {
-    if (magnet() && !touching && !anim && stage.classList.contains('stuck')) glide(0);
+    if (magnet() && !touching && !anim && performance.now() - own > 300 && stage.classList.contains('stuck')) glide(0, 0);
   }
   function later() { clearTimeout(settleT); settleT = setTimeout(settle, 160); }
   window.addEventListener('touchstart', function () { touching = true; clearTimeout(settleT); stop(); }, { passive: true });
@@ -376,10 +387,11 @@ if (dr) (function () {
   }, { passive: false });
   dr.addEventListener('touchend', function (e) {
     if (!drag) return;
-    var p = drag.pts, a = p[0], b = p[p.length - 1], v = 0;
+    var p = drag.pts, a = p[0], b = p[p.length - 1], v = 0, moved = window.scrollY - drag.s;
     if (e.timeStamp - b[0] < 80 && b[0] > a[0]) v = (a[1] - b[1]) / (b[0] - a[0]);  // un doigt qui monte fait descendre la page
     drag = null;
-    glide(Math.max(-6, Math.min(6, v)));
+    v = Math.max(-6, Math.min(6, v));
+    glide(v, Math.abs(v) > 0.05 ? Math.sign(v) : Math.abs(moved) > 2 ? Math.sign(moved) : 0);
   });
   dr.addEventListener('touchcancel', function () { drag = null; });
   scrollers.push(function () {
